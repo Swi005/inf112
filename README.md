@@ -1,4 +1,4 @@
-# RoboRally
+# RoboRally [![Build Status](https://travis-ci.com/Swi005/inf112.svg?branch=master)](https://travis-ci.com/Swi005/inf112)
 Description TBD
 
 ## Known bugs
