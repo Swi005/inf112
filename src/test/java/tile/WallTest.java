@@ -6,8 +6,6 @@ import inf112.tiles.Wall;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class WallTest extends TestCase
 {
     @Test

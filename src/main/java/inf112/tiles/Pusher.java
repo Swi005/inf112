@@ -5,9 +5,16 @@ import inf112.misc.Facing;
 public class Pusher implements ITile
 {
     Facing dir;
+    public boolean isExtended = false;
     public Pusher(Facing dir)
     {
         this.dir = dir;
+
+    }
+    public Pusher(Facing dir, boolean isExtended)
+    {
+        this.dir = dir;
+        this.isExtended = isExtended;
     }
 
     /**
