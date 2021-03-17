@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class Utils
 {
+
     //TODO: Test findPath
     /**
      * finds a path in a straight line until its told to stop or encounters an obstacle
