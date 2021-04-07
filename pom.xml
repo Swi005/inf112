@@ -4,9 +4,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>inf112.skeleton.app</groupId><!-- FIXME: Change this-->
+  <groupId>inf112</groupId>
   <artifactId>RoboRally</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
 
   <name>RoboRally</name>
   <url>https://github.com/Swi005/inf112</url>

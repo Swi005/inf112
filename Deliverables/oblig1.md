@@ -5,11 +5,11 @@ Jeg har valgt å bruke Scrum. Siden jeg jobber alene så er jeg ikke så avhengi
 
 ###Estimasjon
 
-![rm](misc/roadmap.png)
+![rm](inf112.misc/roadmap.png)
 
 Dette er planen for resten av mars. Ettersom jeg ikke helt er sikker på hvordan de neste ukene kommer til å se ut i henhold til annet skolearbeid så kan det hende at noe av dette må flyttes. I så fall vil [INF112-49 | evt. INF112-46] bli dyttet til et senere tidspunkt og dette kommer selvfølgelig også til å ha en påvirkning på leveringstid.
 
-![?](misc/Skjermbilde.PNG)
+![?](inf112.misc/Skjermbilde.PNG)
 Scrum tavle for 22-28 mars
 *Fikk ikke plass til å vise alle underoppgavene dessverre.*
 

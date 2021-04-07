@@ -1,4 +1,4 @@
-package tile;
+package inf112.tile;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.misc.Facing;
@@ -15,7 +15,7 @@ class WallTest extends TestCase
         Vector2 dest = new Vector2(1,0);//move 1 north
         Wall w = new Wall(new Facing[]{new Facing(1,0), new Facing(0,1)}); //Walls to the east and north
 
-        assertFalse(w.canMoveToFromThis(dest, orgn));
+        assertFalse(w.canMoveToFromThis(dest, orgn,w));
     }
     @Test
     public void NotBlockedByWallTest()
@@ -24,6 +24,6 @@ class WallTest extends TestCase
         Vector2 dest = new Vector2(-1,0);//move 1 north
         Wall w = new Wall(new Facing[]{new Facing(1,0), new Facing(0,1)}); //Walls to the east and north
 
-        assertTrue(w.canMoveToFromThis(dest, orgn));
+        assertTrue(w.canMoveToFromThis(dest, orgn,w));
     }
 }

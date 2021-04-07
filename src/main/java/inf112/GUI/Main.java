@@ -6,12 +6,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "GameBoard";
         cfg.width = 500;
         cfg.height = 500;
 
-        new LwjglApplication(new HelloWorld(), cfg);
+        new LwjglApplication(new GameGUI(), cfg);
     }
 }

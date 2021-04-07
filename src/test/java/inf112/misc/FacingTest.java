@@ -1,10 +1,7 @@
-package misc;
+package inf112.misc;
 
-import inf112.misc.Facing;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class FacingTest extends TestCase
 {
@@ -66,5 +63,18 @@ class FacingTest extends TestCase
 
         assertEquals(f,t);
     }
+    @Test
+    public void testTurn()
+    {
+        Facing right = new Facing(0,1);
+        Facing left = new Facing(0,-1);
+        Facing back = new Facing(-1,0);
 
+
+        assertEquals(new Facing("South"), new Facing("east").turn(right));
+
+        assertEquals(new Facing("East"), new Facing("south").turn(left));
+
+        assertEquals(new Facing("north"), new Facing("south").turn(back));
+    }
 }

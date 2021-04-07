@@ -5,7 +5,7 @@ import inf112.misc.Facing;
 
 public class Wall implements ITile
 {
-    Facing[] walls;
+    private Facing[] walls;
     public Wall(Facing[] walls)
     {
         this.walls = walls;
@@ -20,16 +20,20 @@ public class Wall implements ITile
      * Method for checking if a position is blocked by a wall
      *
      * @param pos - the position that you want to check if is blocked
-     * @param wallPos - Position of the wall tile
+     * @param wallPos - Position of the wall inf112.tile
      * @return - if its possible to move to/ from pos
      */
-    public boolean canMoveToFromThis(Vector2 pos, Vector2 wallPos)
+    public static boolean canMoveToFromThis(Vector2 pos, Vector2 wallPos, Wall wl)
     {
-        for (Facing f: walls)
+        for (Facing f: wl.getWalls())
         {
             if(wallPos.add(f).equals(pos))
                 return false;
         }
         return true;
+    }
+    public Facing[] getWalls()
+    {
+        return walls;
     }
 }

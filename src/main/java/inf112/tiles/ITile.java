@@ -7,12 +7,11 @@ public interface ITile
 {
 
     /**
-     * Returns the priority of the tile
-     * higher value means that this tile will overlap other with lower priority
+     * Returns the priority of the inf112.tile
+     * higher value means that this inf112.tile will overlap other with lower priority
      * used for generating gameboard from gameMaps
      * @return - priority
      */
     int priority();
-
 
 }

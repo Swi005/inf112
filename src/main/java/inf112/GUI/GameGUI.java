@@ -7,13 +7,16 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-public class HelloWorld implements ApplicationListener {
+public class GameGUI implements ApplicationListener
+{
     private SpriteBatch batch;
     private BitmapFont font;
-    
+
     private TiledMap map;
     private TiledMapTileLayer boardLayer,playerLayer,holeLayer,flagLayer;
 
@@ -22,9 +25,10 @@ public class HelloWorld implements ApplicationListener {
     public int MAP_SIZE_X = 5;
     public int MAP_SIZE_Y = 5;
     public int CELL_SIZE = 300;
+
     @Override
     public void create() {
-         map = new TmxMapLoader().load("assets/tileMap.tmx");
+        map = new TmxMapLoader().load("assets/tileMap.tmx");
         boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
         holeLayer = (TiledMapTileLayer) map.getLayers().get("Hole");

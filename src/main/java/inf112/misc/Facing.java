@@ -65,5 +65,20 @@ public class Facing extends Vector2
     public boolean equals(Object obj) {
         return (((Facing)obj).x == this.x && ((Facing)obj).y == this.y);
     }
+
+    public Facing turn(Facing v)
+    {
+        if(v.y == 1)
+            return (Facing)this.copy().rotate90(1);
+        if(v.y == -1)
+            return (Facing)this.copy().rotate90(-1);
+        if(v.x == -1)
+            return (Facing)this.copy().rotate90(1).rotate90(1);
+        return this.copy();
+    }
+    public Facing copy()
+    {
+        return new Facing((int)this.x, (int)this.y);
+    }
 }
 
