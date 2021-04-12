@@ -1,4 +1,4 @@
-# Obligatorisk 1.
+# Obligatorisk 2.
 
 ## Hva har blitt gjort
 Fokuset siden forgje oblig har vært på å få all spill logikken på plass.
