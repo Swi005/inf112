@@ -2,11 +2,11 @@
 Description TBD
 
 
-##Running the program(Windows only for now)
-###Requirements
+## Running the program(Windows only for now)
+### Requirements
 * Up-to-date Maven and Java installs
 
-###How to install
+### How to install
 1. Open cmd and cd to the project
 2. Run ``mvn compile``
 3. Run ``mvn package``
