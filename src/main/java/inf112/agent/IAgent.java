@@ -2,6 +2,7 @@ package inf112.agent;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.cards.ICard;
+import inf112.gameBoard.Robot;
 
 import java.util.List;
 
@@ -31,5 +32,5 @@ public interface IAgent
     /**
      * Sends board updates to the agent, i.e robot position
      */
-    void Update();
+    void Update(List<Robot> bots);
 }

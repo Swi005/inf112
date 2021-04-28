@@ -2,6 +2,7 @@ package inf112.misc;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.gameBoard.GameBoard;
+import inf112.tiles.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,5 +53,123 @@ public class Utils
                 return false;
         }
         return true;
+    }
+
+    public static ITile toTile(int id)
+    {
+        switch (id) {
+            case 0:
+                return new Pusher(new Facing("north"));
+            case 1:
+                return new Pusher(new Facing("east"));
+            case 2:
+                return new Pusher(new Facing("south"));
+            case 3:
+                return new Pusher(new Facing("west"));
+            case 4:
+                return new Floor();
+            case 5:
+                return new Hole();
+            case 6:
+                return new Repair();
+            case 7:
+                return new Wall(new Facing[]{new Facing("south"), new Facing("east")});
+            case 8:
+                return new Pusher(new Facing("north"));
+            case 9:
+                return new Pusher(new Facing("east"));
+            case 10:
+                return new Pusher(new Facing("south"));
+            case 11:
+                return new Pusher(new Facing("west"));
+            case 14:
+                return new Repair();
+            case 15:
+                return new Wall(new Facing[]{new Facing("north"), new Facing("east")});
+            case 22:
+                return new Wall(new Facing[]{new Facing("east")});
+            case 23:
+                return new Wall(new Facing[]{new Facing("north"), new Facing("west")});
+            case 28:
+                return new Wall(new Facing[]{new Facing("south")});
+            case 29:
+                return new Wall(new Facing[]{new Facing("west")});
+            case 30:
+                return new Wall(new Facing[]{new Facing("north")});
+            case 31:
+                return new Wall(new Facing[]{new Facing("south"), new Facing("west")});
+            case 36:
+                return new Laser(new Facing("north"), 1, new Facing[]{new Facing("south")});
+            case 37:
+                return new Laser(new Facing("east"), 1, new Facing[]{new Facing("west")});
+            case 44:
+                return new Laser(new Facing("south"), 1, new Facing[]{new Facing("north")});
+            case 45:
+                return new Laser(new Facing("west"), 1, new Facing[]{new Facing("east")});
+            case 52://TODO: GEAR LOGIC
+                return new Gear(); //LEFT
+            case 53:
+                return new Gear(); //RIGHT
+            case 54:
+                return new Flag(1);
+            case 62:
+                return new Flag(2);
+            case 70:
+                return new Flag(3);
+            case 78:
+                return new Flag(4);
+            case 90:
+                return new Hole();
+            case 91:
+                return new Hole();
+            case 86:
+                return new Laser(new Facing("north"), 2, new Facing[]{new Facing("south")});
+            case 92:
+                return new Laser(new Facing("east"), 1, new Facing[]{new Facing("west")});
+            case 93:
+                return new Laser(new Facing("south"), 1, new Facing[]{new Facing("north")});
+            case 94:
+                return new Laser(new Facing("west"), 1, new Facing[]{new Facing("east")});
+            case 105:
+                return new Hole();
+            case 106:
+                return new Hole();
+            case 107:
+                return new Hole();
+            case 108:
+                return new Hole();
+            case 109:
+                return new Hole();
+            case 112:
+                return new Hole();
+            case 113:
+                return new Hole();
+            case 114:
+                return new Hole();
+            case 115:
+                return new Hole();
+            case 116:
+                return new Hole();
+            case 117:
+                return new Hole();
+            case 120:
+                return new Spawnpoint(1);
+            case 121:
+                return new Spawnpoint(2);
+            case 123:
+                return new Spawnpoint(3);
+            case 124:
+                return new Spawnpoint(4);
+            case 128:
+                return new Spawnpoint(5);
+            case 129:
+                return new Spawnpoint(6);
+            case 130:
+                return new Spawnpoint(7);
+            case 131:
+                return new Spawnpoint(8);
+            default:
+                return new Floor();
+        }
     }
 }

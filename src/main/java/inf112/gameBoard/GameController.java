@@ -131,9 +131,6 @@ public class GameController
         }
         while(!Utils.threadsHaveFinished(threads))
         {
-            //TODO: Send msg to IAgents?
-            //Pros: Gives waiting msg,
-            //Negs: Spams agents can cause timeouts etc.
         }
 
         movePhase();
@@ -158,7 +155,7 @@ public class GameController
     }
     private void activateBoardElements()
     {
-        gameBoard.updateBoardElems();
+        gameBoard.updateBoardElements();
     }
     private void flagAndRepair()
     {

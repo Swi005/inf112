@@ -2,13 +2,14 @@ package inf112.tiles;
 
 import inf112.misc.Facing;
 
-public class Laser implements ITile{
+public class Laser extends Wall{
 
     private Facing f;
     private int damage;
 
-    public Laser(Facing f, int damage)
+    public Laser(Facing f, int damage, Facing[] walls)
     {
+        super(walls);
         this.f = f;
         this.damage = damage;
     }

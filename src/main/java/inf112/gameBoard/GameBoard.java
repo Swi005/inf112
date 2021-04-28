@@ -13,19 +13,16 @@ import java.util.List;
 public class GameBoard
 {
     private ITile[][] board;
-    private final int height,width;
-    private List<Robot> bots = new ArrayList<>(); //TODO: Implement Bot class
+    private List<Robot> bots = new ArrayList<>();
     private List<Vector2> flagPos = new ArrayList<>();
     private List<Vector2> lasers = new ArrayList<>();
 
-    public GameBoard(ITile[][] board, int height, int width)
+    public GameBoard(ITile[][] board)
     {
         this.board = board;
-        this.width = width;
-        this.height = height;
 
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < board[0].length; y++) {
                 if(board[x][y] instanceof Flag)
                     flagPos.set(((Flag)board[x][y]).getFlagId(),new Vector2(x,y));
                 else if(board[x][y] instanceof Laser)
@@ -37,7 +34,7 @@ public class GameBoard
     /**
      * Enumerates over all tiles on the board and updates the tiles
      */
-    public void updateBoardElems()
+    public void updateBoardElements()
     {
         //TODO: Implement this
         //I.e check robots positions and if they are on something. if they are on something do the appropriate thing.
@@ -79,12 +76,12 @@ public class GameBoard
                 return false;
         }
 
-        if(board[(int)too.x][(int)too.y] instanceof Wall)
+        if(board[(int)too.x][(int)too.y] instanceof Wall || board[(int)too.x][(int)too.y] instanceof Laser)
         {
             if(!Wall.canMoveToFromThis(from,too,(Wall)board[(int)too.x][(int)too.y]))
                 return false;
         }
-        if(board[(int)from.x][(int)from.y] instanceof Wall)
+        if(board[(int)from.x][(int)from.y] instanceof Wall || board[(int)from.x][(int)from.y] instanceof Laser)
         {
             return Wall.canMoveToFromThis(from, too, (Wall) board[(int) from.x][(int) from.y]);
         }
