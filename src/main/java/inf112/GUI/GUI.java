@@ -21,7 +21,7 @@ public class GUI extends Game
     {
         super();
         ITile[][] brd= BoardParser.parseBoard("");
-        game = new GameController(new GameBoard(brd, brd.length, brd[0].length),1);
+        game = new GameController(new GameBoard(brd),1);
         gameScreen = new DebugGUI("tbd", this);
         game.addActor((IAgent)gameScreen);
 
