@@ -1,7 +1,6 @@
 package inf112.gameBoard;
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.GUI.GameGUI;
 import inf112.agent.IAgent;
 import inf112.cards.*;
 import inf112.misc.Utils;
@@ -13,7 +12,6 @@ public class GameController
 {
     private int maxActors = 4;
     private GameBoard gameBoard;
-    private GameGUI gui;//View
     private int botIDGen = 0;
     private HashMap<Actor, IAgent> actorAgentRelation = new HashMap<>();
     private HashSet<ICard> cards = new HashSet<>();
