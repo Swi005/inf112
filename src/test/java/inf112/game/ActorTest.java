@@ -1,7 +1,7 @@
 package inf112.game;
 
-import inf112.gameBoard.Actor;
-import inf112.cards.ICard;
+import gameBoard.Actor;
+import cards.ICard;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 

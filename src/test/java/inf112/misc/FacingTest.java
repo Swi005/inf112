@@ -1,6 +1,7 @@
 package inf112.misc;
 
 import junit.framework.TestCase;
+import misc.Facing;
 import org.junit.jupiter.api.Test;
 
 class FacingTest extends TestCase

@@ -1,6 +1,6 @@
 package inf112.misc;
 
-import inf112.tiles.ITile;
+import tiles.ITile;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ class BoardParserTest extends TestCase {
     @Test
     void parseBoardTest()
     {
-        ITile[][] tst = BoardParser.parseBoard("assets/tileMap.tmx");
+        ITile[][] tst = misc.BoardParser.parseBoard("assets/tileMap.tmx");
         assertNotEquals(null,tst);
     }
 }

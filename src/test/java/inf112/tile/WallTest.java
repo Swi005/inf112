@@ -1,8 +1,8 @@
 package inf112.tile;
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.misc.Facing;
-import inf112.tiles.Wall;
+import misc.Facing;
+import tiles.Wall;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 

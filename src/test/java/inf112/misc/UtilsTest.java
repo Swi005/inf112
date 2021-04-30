@@ -2,6 +2,7 @@ package inf112.misc;
 
 import com.badlogic.gdx.math.Vector2;
 import junit.framework.TestCase;
+import misc.Utils;
 import org.junit.jupiter.api.Test;
 
 class UtilsTest extends TestCase {
