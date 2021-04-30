@@ -25,14 +25,14 @@ public class GUI extends Game
         game = new GameController(new GameBoard(brd),numPlayers);
         gameScreen = new GameScreen("assets/tileMap.tmx", this);
         game.addActor((IAgent)gameScreen);
-
-
     }
+
     @Override
     public void create()
     {
         skin = new Skin(new FileHandle("assets/skin/uiskin.json"));
     }
+
     public Skin getSkin(){return skin;}
 
     @Override

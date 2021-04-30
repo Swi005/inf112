@@ -21,6 +21,7 @@ public class GameController
     {
         //TODO:Finish Constructor
         this.gameBoard = game;
+
         if(maxActors >= this.maxActors)
             this.maxActors = maxActors;
     }
@@ -33,6 +34,7 @@ public class GameController
         if(actorAgentRelation.size() < maxActors)
         {
             actorAgentRelation.put(new Actor(botIDGen),agent);
+            gameBoard.addBot(botIDGen);//Add bot to game with same id as actor
             botIDGen++;
             return true;
         }

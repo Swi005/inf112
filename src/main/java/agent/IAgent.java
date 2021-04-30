@@ -17,13 +17,6 @@ public interface IAgent
     List<ICard> getChosenCards(List<ICard> availableCards, int available);
 
     /**
-     * Querries the agent for a spawn pos for the bot,
-     * @param availablePositions - Available positions that the bot can spawn at
-     * @return - The chosen position
-     */
-    Vector2 getSpawnPosition(List<Vector2> availablePositions);
-
-    /**
      * What type of agent it is
      * @return
      */

@@ -2,7 +2,6 @@ package GUI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -27,7 +25,6 @@ import cards.ICard;
 import gameBoard.Robot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GameScreen implements Screen, IAgent
@@ -42,18 +39,18 @@ public class GameScreen implements Screen, IAgent
     private Stage stage;
     private final Viewport view;
 
+    private List<ICard> availableCards = new ArrayList<>();
+    private List<ICard> chosenCards = new ArrayList<>();
     //Tables
     private Table availableTable;//Avaiable cards
     private Table chosenTable; // Cards chosen by player
 
     //Buttons
-    private Table buttons;
-    protected TextButton powerDown;//Power botdown
     protected TextButton nextTurn; //Do the next turn
-    protected TextButton clear; //clear chosen cards
 
     private List<TiledMapTileLayer.Cell> botCells = new ArrayList<>();
 
+    private boolean ready = false;
 
     private GUI gui;
     public GameScreen(String mapPath, GUI gui)
@@ -97,38 +94,25 @@ public class GameScreen implements Screen, IAgent
         chosenTable = new Table();
         availableTable = new Table();
 
-        buttons.setBounds(Gdx.graphics.getWidth()-(Gdx.graphics.getWidth()/6f),0,Gdx.graphics.getWidth()/6f,Gdx.graphics.getHeight()/5f);
-
-        powerDown = new TextButton("Power Down",gui.getSkin());
-        powerDown.addListener(new ChangeListener()
-        {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                //TODO: Signal to gameController that bot is shut down
-            }
-        });
-
-
         nextTurn = new TextButton("Next Turn", gui.getSkin());
-        powerDown.addListener(new ChangeListener()
+        nextTurn.addListener(new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                //TODO: Signal to gamecontroller that bot is shut down
+                ready = true;
             }
         });
 
-        buttons = new Table();
         stage.addActor(placements);
         stage.addActor(chosenTable);
         stage.addActor(cardSlots);
         stage.addActor(availableTable);
-        stage.addActor(buttons);
     }
 
     @Override
     public void render(float v) {
-
+        renderAvailableCards();
+        renderChosenCards();
     }
 
     @Override
@@ -159,12 +143,46 @@ public class GameScreen implements Screen, IAgent
     @Override
     public List<ICard> getChosenCards(List<ICard> availableCards, int available)
     {
-        return null;
+        this.availableCards = availableCards;
+        availableCards.clear();
+        while(!ready)
+        {
+            //run this while waiting for the other stuff;
+        }
+        ready = false;
+        return chosenCards;
     }
 
-    @Override
-    public Vector2 getSpawnPosition(List<Vector2> availablePositions) {
-        return availablePositions.get(0);
+    private void renderAvailableCards()
+    {
+        renderer.getBatch().begin();
+        for (final ICard card: availableCards) {
+            final TextButton btn = new TextButton(card.toString(),gui.getSkin());
+            btn.addListener(new ChangeListener()
+            {
+                @Override
+                public void changed(ChangeEvent changeEvent, Actor actor) {
+                    chosenCards.add(card);
+                    availableTable.removeActor(btn);
+                    renderChosenCards();
+                }
+            });
+            availableTable.add(btn);
+        }
+
+        renderer.getBatch().end();
+    }
+
+    private void renderChosenCards()
+    {
+        renderer.getBatch().begin();
+        for (final ICard card : chosenCards)
+        {
+
+            final TextButton btn = new TextButton(card.toString(),gui.getSkin());
+            chosenTable.add(btn);
+        }
+        renderer.getBatch().end();
     }
 
     @Override

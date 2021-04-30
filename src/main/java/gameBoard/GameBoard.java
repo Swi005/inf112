@@ -2,6 +2,7 @@ package gameBoard;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
+import misc.Facing;
 import tiles.*;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class GameBoard
     private List<Robot> bots = new ArrayList<>();
     private List<Vector2> flagPos = new ArrayList<>();
     private List<Vector2> lasers = new ArrayList<>();
-
+    private List<Vector2> spawnpoints = new ArrayList<>();
     public GameBoard(ITile[][] board)
     {
         this.board = board;
@@ -27,6 +28,8 @@ public class GameBoard
                     flagPos.set(((Flag)board[x][y]).getFlagId(),new Vector2(x,y));
                 else if(board[x][y] instanceof Laser)
                     lasers.add(new Vector2(x,y));
+                else if(board[x][y] instanceof Spawnpoint)
+                    spawnpoints.set(((Spawnpoint) board[x][y]).ID, new Vector2(x,y));
             }
         }
     }
@@ -103,9 +106,11 @@ public class GameBoard
         }
         return false;
     }
-    public void addBot(Robot bot)
+    public Robot addBot(int id)
     {
-        this.bots.add(bot);
+        Robot b = new Robot(id, 10, flagPos.get(0), spawnpoints.get(id), new Facing("north"));
+        bots.add(b);
+        return b;
     }
 
     public Robot getBot(int id)
@@ -128,9 +133,21 @@ public class GameBoard
             if(bot.getRobotPos() == bot.getNextFlag())
             {
                 bot.setSpawnPoint(bot.getRobotPos());
-                bot.setNextFlag(flagPos.get(flagPos.indexOf(bot.getRobotPos())+1));
-                //TODO: If nextFlag is null the bot has visited all flags and wins
+                if(flagPos.get(flagPos.indexOf(bot.getRobotPos())+1) != null)
+                {
+                    bot.setNextFlag(flagPos.get(flagPos.indexOf(bot.getRobotPos())+1));
+                }
+                else{
+                    //TODO: ADD VICTORY STUFF
+                }
+            }
+            if(bot.getHp() == 0){//if it has 0 hp set spawn it at its spawnpoitn
+                bot.setRobotPos(bot.getSpawnPoint());
             }
         }
+    }
+    public List<Vector2> getSpawnPos()
+    {
+        return spawnpoints;
     }
 }
