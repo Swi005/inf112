@@ -1,4 +1,9 @@
 package cards;
 
-public class Again {
+public class Again
+{
+    @Override
+    public String toString() {
+        return "Again";
+    }
 }
