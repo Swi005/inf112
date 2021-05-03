@@ -81,11 +81,15 @@ public class Facing extends Vector2
         return new Facing((int)this.x, (int)this.y);
     }
 
+    /**
+     * Should only be used for gui rotation
+     * @return
+     */
     public int getDegrees()
     {
         if(this.x > 0)
             return 1;
-        if(this.y > 0)
+        if(this.y < 0)
             return 2;
         if(this.x < 0)
             return 3;

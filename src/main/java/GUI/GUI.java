@@ -5,6 +5,7 @@ import agent.IAgent;
 import cards.ICard;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -140,18 +142,41 @@ public class GUI extends Game implements IAgent {
         {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                availableCards.clear();
+                if(isStarted)
+                {
+                    availableCards.clear();
 
-                game.programRegister(gui, chosenCards);
+                    game.programRegister(gui, chosenCards);
 
-                chosenCards.clear();
+                    chosenCards.clear();
 
-                chosenTable.clear();
+                    chosenTable.clear();
 
-                availableCards.addAll(game.getCards(gui));
-                renderAvailableCards();
+                    availableCards.addAll(game.getCards(gui));
+                    renderAvailableCards();
 
-                showBots(game.executeTurn(gui));
+                    showBots(game.executeTurn(gui));
+
+                    if(game.checkWin())
+                    {
+                        Dialog dialog = new Dialog("Victory", skin) {
+                            public void result(Object obj) {
+
+                            }
+                        };
+                        dialog.text("You have won");
+                        dialog.button("Quit Game", true).addListener(
+                                new ChangeListener() {
+                                    @Override
+                                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                                        gui.dispose();
+                                    }
+                                }
+                        );
+                        dialog.show(stage);
+                    }
+                }
+
             }
         });
 
@@ -204,10 +229,12 @@ public class GUI extends Game implements IAgent {
             {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    chosenCards.add(card);
-                    availableCards.remove(card);
-                    availableTable.removeActor(btn);
-                    chosenTable.add(btn);
+                    if(chosenCards.size()<= game.getRegisterSize(gui)) {
+                        chosenCards.add(card);
+                        availableCards.remove(card);
+                        availableTable.removeActor(btn);
+                        chosenTable.add(btn);
+                    }
                 }
             });
             i++;
@@ -224,12 +251,18 @@ public class GUI extends Game implements IAgent {
 
     public void showBots(List<Robot> bots)
     {
+        for (int i = 0; i < playerLayer.getHeight(); i++) {
+            for (int e = 0; e < playerLayer.getWidth(); e++) {
+                playerLayer.setCell(i,e, new TiledMapTileLayer.Cell());
+            }
+        }
         for (Robot b : bots)
         {
             Vector2 pos = b.getRobotPos();
 
-            botCells.get(b.getId()).setRotation(b.getFacing().getDegrees());
-            playerLayer.setCell((int)pos.x,(int)pos.y,botCells.get(b.getId()));
+            botCells.get(b.getId()).setRotation(b.getFacing().getDegrees()-1);
+            playerLayer.setCell((int)pos.y,(int)pos.x,botCells.get(b.getId()));
+            System.out.println("Player at x:" + pos.x +" y: " + pos.y);
         }
     }
 }

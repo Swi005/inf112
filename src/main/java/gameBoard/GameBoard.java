@@ -3,6 +3,7 @@ package gameBoard;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 import misc.Facing;
+import misc.Utils;
 import tiles.*;
 
 import java.util.ArrayList;
@@ -16,9 +17,9 @@ public class GameBoard
 {
     private ITile[][] board;
     private List<Robot> bots = new ArrayList<>();
-    private HashMap<Integer,Vector2> flagPos = new HashMap<>();
-    private List<Vector2> lasers = new ArrayList<>(10);
-    private HashMap<Integer,Vector2> spawnpoints = new HashMap<Integer,Vector2>();
+    private final HashMap<Integer,Vector2> flagPos = new HashMap<>();
+    private final List<Vector2> lasers = new ArrayList<>(10);
+    private final HashMap<Integer,Vector2> spawnpoints = new HashMap<Integer,Vector2>();
 
     public GameBoard(ITile[][] board)
     {
@@ -51,23 +52,26 @@ public class GameBoard
             Robot bot = robotQueue.removeFirst();
             Vector2 botPos = bot.getRobotPos();
 
-            if(board[(int) botPos.x][(int)botPos.y] instanceof Wall)
+            if(!Utils.isWithinBounds(bot, board.length, board[0].length)) {
+                bot.setRobotPos(bot.getSpawnPoint());
                 continue;
-            if(board[(int) botPos.x][(int)botPos.y] instanceof Floor)
-                continue;
+            }
+
             if(board[(int) botPos.x][(int)botPos.y] instanceof Hole)
-                bots.get(bots.indexOf(bot)).setHp(0);//TODO: Where does 0hp checks and bot respawn happen?
-            if(board[(int) botPos.x][(int)botPos.y] instanceof Flag)
-                continue;
-            if(board[(int) botPos.x][(int)botPos.y] instanceof Repair)
-                continue;
+                bots.get(bots.indexOf(bot)).setRobotPos(bots.get(bots.indexOf(bot)).getSpawnPoint());
             if(board[(int) botPos.x][(int)botPos.y] instanceof Pusher)
                 if(((Pusher)board[(int) botPos.x][(int)botPos.y]).isExtended) {
                     bot.setRobotPos(botPos.add(((Pusher) board[(int) botPos.x][(int) botPos.y]).getPushDirection()));
                     robotQueue.addLast(bot);
                 }
-
-            //TODO: Implement rest of tiles
+            if(board[(int) botPos.x][(int)botPos.y] instanceof Flag)
+                if(((Flag)board[(int) botPos.x][(int)botPos.y]).getFlagId() == bot.getNextFlag()) {
+                    if(!flagPos.containsKey(bot.getNextFlag()))
+                        bot.setNextFlag(-1);
+                    else
+                        bot.setNextFlag(bot.getNextFlag()+1);
+                    bot.setSpawnPoint(botPos);
+                }
         }
     }
 
@@ -79,7 +83,8 @@ public class GameBoard
             if(b.getRobotPos() == too)
                 return false;
         }
-
+        if(board[(int)too.x][(int)too.y].equals(null))
+            return false;
         if(board[(int)too.x][(int)too.y] instanceof Wall || board[(int)too.x][(int)too.y] instanceof Laser)
         {
             if(!Wall.canMoveToFromThis(from,too,(Wall)board[(int)too.x][(int)too.y]))
@@ -93,23 +98,22 @@ public class GameBoard
     }
 
     /**
-     * Moves a bot to an adjacent location.
-     * @param bot
-     * @param too
+     * Func for quickly checking if any of the bots are out of bounds,
+     * temporary fix since i couldnt find the source of the oob error.
      * @return
      */
-    public boolean moveBot(Robot bot, Vector2 too)
+    public void checkOutOfBounds()
     {
-        if(this.canGo(bot.getRobotPos(),too))
-        {
-            bot.setRobotPos(too);
-            return true;
+        for (Robot bot:bots) {
+            if(!Utils.isWithinBounds(bot, this.getHeight(), this.getWidth())) {
+                bot.setFacing(new Facing("North"));
+                bot.setRobotPos(bot.getSpawnPoint());
+            }
         }
-        return false;
     }
     public Robot addBot(int id)
     {
-        Robot b = new Robot(id, 10, 0, spawnpoints.get(id), new Facing("north"));
+        Robot b = new Robot(id, 10, 0, spawnpoints.get(id).cpy(), new Facing("north"));
         bots.add(b);
         return b;
     }
@@ -126,6 +130,10 @@ public class GameBoard
     public void updateBotStatus()
     {
         for (Robot bot: bots) {
+            if(!Utils.isWithinBounds(bot, board.length, board[0].length)) {
+                bot.setRobotPos(bot.getSpawnPoint());
+                continue;
+            }
             if(board[(int) bot.getRobotPos().x][(int) bot.getRobotPos().y] instanceof Repair)
             {
                 bot.setSpawnPoint(bot.getRobotPos());
@@ -142,13 +150,32 @@ public class GameBoard
                     //TODO: ADD VICTORY STUFF
                 }
             }
-            if(bot.getHp() == 0){//if it has 0 hp set spawn it at its spawnpoitn
+            if(bot.getHp() == 0){//if it has 0 hp set spawn it at its spawnpoint
                 bot.setRobotPos(bot.getSpawnPoint());
+                bot.setFacing(new Facing("North"));
             }
         }
     }
     public HashMap<Integer, Vector2> getSpawnPos()
     {
         return spawnpoints;
+    }
+
+    public boolean checkWin() {
+        for (Robot b:bots) {
+            if(b.getNextFlag() == -1)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getWidth() {
+        return board[0].length;
+    }
+
+    public int getHeight() {
+        return board.length;
     }
 }
