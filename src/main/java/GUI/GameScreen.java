@@ -2,6 +2,7 @@ package GUI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -58,7 +59,7 @@ public class GameScreen implements Screen, IAgent
         this.gui = gui;
         TiledMap map = new TmxMapLoader().load(mapPath);
         boardLayer = (TiledMapTileLayer)map.getLayers().get("Board");
-        playerLayer = (TiledMapTileLayer)map.getLayers().get("player");
+        playerLayer = (TiledMapTileLayer)map.getLayers().get("Player");
 
         final int height = boardLayer.getHeight() * CELL_SIZE;
         final int width = boardLayer.getWidth() * CELL_SIZE;
@@ -111,34 +112,12 @@ public class GameScreen implements Screen, IAgent
 
     @Override
     public void render(float v) {
+        renderer.render();
+        stage.draw();
         renderAvailableCards();
         renderChosenCards();
     }
 
-    @Override
-    public void resize(int i, int i1) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
 
     @Override
     public List<ICard> getChosenCards(List<ICard> availableCards, int available)
@@ -200,4 +179,29 @@ public class GameScreen implements Screen, IAgent
             playerLayer.setCell((int)pos.x,(int)pos.y,botCells.get(b.getId()));
         }
     }
+    @Override
+    public void resize(int i, int i1) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
 }

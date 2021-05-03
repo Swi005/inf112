@@ -6,6 +6,7 @@ import misc.Facing;
 import tiles.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,9 +16,10 @@ public class GameBoard
 {
     private ITile[][] board;
     private List<Robot> bots = new ArrayList<>();
-    private List<Vector2> flagPos = new ArrayList<>();
-    private List<Vector2> lasers = new ArrayList<>();
-    private List<Vector2> spawnpoints = new ArrayList<>();
+    private HashMap<Integer,Vector2> flagPos = new HashMap<>();
+    private List<Vector2> lasers = new ArrayList<>(10);
+    private HashMap<Integer,Vector2> spawnpoints = new HashMap<Integer,Vector2>();
+
     public GameBoard(ITile[][] board)
     {
         this.board = board;
@@ -25,15 +27,14 @@ public class GameBoard
         for (int x = 0; x < board.length; x++) {
             for (int y = 0; y < board[0].length; y++) {
                 if(board[x][y] instanceof Flag)
-                    flagPos.set(((Flag)board[x][y]).getFlagId(),new Vector2(x,y));
+                    flagPos.put(((Flag)board[x][y]).getFlagId(),new Vector2(x,y));
                 else if(board[x][y] instanceof Laser)
                     lasers.add(new Vector2(x,y));
                 else if(board[x][y] instanceof Spawnpoint)
-                    spawnpoints.set(((Spawnpoint) board[x][y]).ID, new Vector2(x,y));
+                    spawnpoints.put(((Spawnpoint) board[x][y]).ID, new Vector2(x,y));
             }
         }
     }
-
     /**
      * Enumerates over all tiles on the board and updates the tiles
      */
@@ -108,7 +109,7 @@ public class GameBoard
     }
     public Robot addBot(int id)
     {
-        Robot b = new Robot(id, 10, flagPos.get(0), spawnpoints.get(id), new Facing("north"));
+        Robot b = new Robot(id, 10, 0, spawnpoints.get(id), new Facing("north"));
         bots.add(b);
         return b;
     }
@@ -130,12 +131,12 @@ public class GameBoard
                 bot.setSpawnPoint(bot.getRobotPos());
                 bot.repair(1);
             }
-            if(bot.getRobotPos() == bot.getNextFlag())
+            if(bot.getRobotPos() == flagPos.get(bot.getNextFlag()))
             {
                 bot.setSpawnPoint(bot.getRobotPos());
-                if(flagPos.get(flagPos.indexOf(bot.getRobotPos())+1) != null)
+                if(flagPos.containsKey(bot.getNextFlag()+1))
                 {
-                    bot.setNextFlag(flagPos.get(flagPos.indexOf(bot.getRobotPos())+1));
+                    bot.setNextFlag(bot.getNextFlag()+1);
                 }
                 else{
                     //TODO: ADD VICTORY STUFF
@@ -146,7 +147,7 @@ public class GameBoard
             }
         }
     }
-    public List<Vector2> getSpawnPos()
+    public HashMap<Integer, Vector2> getSpawnPos()
     {
         return spawnpoints;
     }

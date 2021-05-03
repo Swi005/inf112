@@ -6,7 +6,7 @@
 
   <groupId>inf112</groupId>
   <artifactId>RoboRally</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
 
   <name>RoboRally</name>
   <url>https://github.com/Swi005/inf112</url>
@@ -27,7 +27,7 @@
 
     <dependency>
       <groupId>com.badlogicgames.gdx</groupId>
-      <artifactId>gdx-backend-lwjgl</artifactId>
+      <artifactId>gdx-backend-lwjgl3</artifactId>
       <version>1.9.10</version>
     </dependency>
 

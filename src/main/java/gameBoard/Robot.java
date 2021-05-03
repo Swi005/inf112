@@ -8,17 +8,17 @@ public class Robot
     private int id;
     private int hp;//Current hp of bot
     private int maxHp = 10;
-    private Vector2 nextFlagPos; //next flag it needs to visit
+    private int nextFlagID; //next flag it needs to visit
     private Vector2 currPos;
     private Facing facing;
     private Vector2 spawnPoint;
 
 
-    public Robot(int id, int hp, Vector2 nextFlagPos, Vector2 currPos, Facing facing)
+    public Robot(int id, int hp, int nextFlagID, Vector2 currPos, Facing facing)
     {
         this.id = id;
         this.hp = hp;
-        this.nextFlagPos = nextFlagPos;
+        this.nextFlagID = nextFlagID;
         this.currPos = currPos;
         this.facing = facing;
     }
@@ -43,16 +43,16 @@ public class Robot
 
     /**
      * Sets the new next flag
-     * @param flagPos
+     * @param id
      */
-    public void setNextFlag(Vector2 flagPos)
+    public void setNextFlag(int id)
     {
-        this.nextFlagPos = flagPos;
+        this.nextFlagID = id;
     }
 
-    public Vector2 getNextFlag()
+    public int getNextFlag()
     {
-        return this.nextFlagPos;
+        return this.nextFlagID;
     }
     public void doDamage(int dmg)
     {

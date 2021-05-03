@@ -57,7 +57,7 @@ public class Utils
 
     public static ITile toTile(int id)
     {
-        switch (id) {
+        switch (id-1) {
             case 0:
                 return new Pusher(new Facing("north"));
             case 1:
