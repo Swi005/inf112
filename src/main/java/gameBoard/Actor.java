@@ -11,12 +11,10 @@ import java.util.HashSet;
 public class Actor
 {
     private final int id;
-    private HashSet<ICard> availableCards = new HashSet<>();
+    private final HashSet<ICard> availableCards = new HashSet<>();
 
     private int registerSize = 5;
-    private ICard[] botRegister = new ICard[registerSize];
-
-    private int numRespawns; // number of respawns allowed
+    private final ICard[] botRegister = new ICard[registerSize];
 
     private boolean shutDown;
     public Actor(int id)
