@@ -91,5 +91,16 @@ public class Facing extends Vector2
             return 3;
         return 0;
     }
+
+    @Override
+    public String toString() {
+        if(this.x > 0)
+            return "North";
+        if(this.y > 0)
+            return "East";
+        if(this.x < 0)
+            return "South";
+        return "West";
+    }
 }
 

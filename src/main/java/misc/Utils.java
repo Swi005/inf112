@@ -1,5 +1,6 @@
 package misc;
 
+import cards.*;
 import com.badlogic.gdx.math.Vector2;
 import gameBoard.GameBoard;
 import tiles.*;
@@ -39,13 +40,18 @@ public class Utils
      * Checks if two positions are adjacent
      * @param u firstPos
      * @param v secondPos
-     * @return
+     * @return - Boolean
      */
     public static boolean isAdjacent(Vector2 u, Vector2 v)
     {
         return (Math.abs(u.x-v.x) <2 && Math.abs(u.y - v.y) <2);
     }
 
+    /**
+     * Check if all threads in the list have exited
+     * @param threads - Threads to check
+     * @return - Boolean
+     */
     public static boolean threadsHaveFinished(List<Thread> threads)
     {
         for (Thread t: threads) {
@@ -55,6 +61,12 @@ public class Utils
         return true;
     }
 
+    /**
+     * Converts a tile ID to a tile
+     * Used for reading a .tmx file
+     * @param id -tileID
+     * @return
+     */
     public static ITile toTile(int id)
     {
         switch (id-1) {
@@ -170,6 +182,36 @@ public class Utils
                 return new Spawnpoint(8);
             default:
                 return new Floor();
+        }
+    }
+
+    /**
+     * Gets card based upon an int
+     * Used for generating a card deck
+     * @param i
+     * @return
+     */
+    public static ICard getCard(int i)
+    {
+        switch (i) {
+            case 0:
+                return new Again();
+            case 1:
+                return new Move(1);
+            case 2:
+                return new Move(2);
+            case 3:
+                return new Move(3);
+            case 4:
+                return new Reverse(1);
+            case 5:
+                return new Reverse(2);
+            case 6:
+                return new Turn(new Facing("West"));
+            case 7:
+                return new Turn(new Facing("East"));
+            default:
+                return new Turn(new Facing("South"));
         }
     }
 }
