@@ -32,10 +32,8 @@ import gameBoard.GameBoard;
 import gameBoard.GameController;
 import gameBoard.Robot;
 import misc.BoardParser;
-import org.lwjgl.system.CallbackI;
 import tiles.ITile;
 
-import javax.swing.text.View;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,7 +202,7 @@ public class GUI extends Game implements IAgent {
         availableCards.clear();
         while(!ready)
         {
-            //run this while waiting for the other stuff;
+
         }
         ready = false;
         return chosenCards;

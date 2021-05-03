@@ -24,6 +24,8 @@ public class GameController
 
         if(maxActors >= this.maxActors)
             this.maxActors = maxActors;
+
+        generateStartingDeck();
     }
 
     /**
@@ -117,21 +119,13 @@ public class GameController
         List<Thread> threads= new LinkedList<>();
         for (final Actor a: actorAgentRelation.keySet())//TODO: THE use of final here may cause trouble, in case of bugs check this
         {
-            threads.add(new Thread(new Runnable() {//EXPERIMENTAL AS FUCK, DELETE ASYNC CODE IF IFFY!!!!!!!!!!!!!!!
-                public void run() {
-                    a.clearRegisters();
-                    for (ICard c: actorAgentRelation.get(a).getChosenCards((List<ICard>) a.getAvailableCards(),a.getRegisterSize()))
-                    {
-                        a.addCardToRegister(c);
-                    }
-                }
-            }));
-            threads.get(threads.size()-1).start();
+            a.clearRegisters();
+            List<ICard> chosen = new ArrayList<>();
+            chosen.addAll(a.getAvailableCards());
+            for (ICard c : actorAgentRelation.get(a).getChosenCards(chosen, a.getRegisterSize())) {
+                a.addCardToRegister(c);
+            }
         }
-        while(!Utils.threadsHaveFinished(threads))
-        {
-        }
-
         movePhase();
     }
 
@@ -163,6 +157,18 @@ public class GameController
         for (Actor a: actorAgentRelation.keySet())
         {
             a.updateRegisterSize(gameBoard.getBot(a.getId()).getHp());
+        }
+    }
+
+    /**
+     * Generate 100 random cards and add them to the card deck
+     */
+    public void generateStartingDeck()
+    {
+        Random rnd = new Random();
+        for (int i = 0; i < 100; i++)
+        {
+            cards.add(Utils.getCard(rnd.nextInt(8)));
         }
     }
 }

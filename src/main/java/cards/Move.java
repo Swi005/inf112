@@ -1,6 +1,6 @@
 package cards;
 
-public class Move
+public class Move implements ICard
 {
     public int moveLen;
     public Move(int move)
