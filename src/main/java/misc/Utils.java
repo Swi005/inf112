@@ -165,21 +165,21 @@ public class Utils
             case 117:
                 return new Hole();
             case 120:
-                return new Spawnpoint(1);
+                return new Spawnpoint(1-1);
             case 121:
-                return new Spawnpoint(2);
+                return new Spawnpoint(2-1);
             case 123:
-                return new Spawnpoint(3);
+                return new Spawnpoint(3-1);
             case 124:
-                return new Spawnpoint(4);
+                return new Spawnpoint(4-1);
             case 128:
-                return new Spawnpoint(5);
+                return new Spawnpoint(5-1);
             case 129:
-                return new Spawnpoint(6);
+                return new Spawnpoint(6-1);
             case 130:
-                return new Spawnpoint(7);
+                return new Spawnpoint(7-1);
             case 131:
-                return new Spawnpoint(8);
+                return new Spawnpoint(8-1);
             default:
                 return new Floor();
         }

@@ -52,10 +52,9 @@ public class GUI extends Game implements IAgent {
     int width;
 
     //Flags
-    private boolean ready = false;
+    private boolean isStarted = false;
 
     //constructor args
-    private int numPlayers;
     private String mapPath;
 
 
@@ -81,11 +80,12 @@ public class GUI extends Game implements IAgent {
     private List<ICard> availableCards = new ArrayList<>();
     private List<ICard> chosenCards = new ArrayList<>();
 
+    private final GUI gui;
 
-    public GUI(int nPlayers, String mapPath)
+    public GUI(String mapPath)
     {
         super();
-        this.numPlayers = nPlayers;
+        this.gui = this;
         this.mapPath = mapPath;
     }
 
@@ -95,8 +95,8 @@ public class GUI extends Game implements IAgent {
         //Setup game and add this as a player
         skin = new Skin(new FileHandle("assets/skin/uiskin.json"));
         ITile[][] brd= BoardParser.parseBoard("assets/tileMap.tmx");
-        game = new GameController(new GameBoard(brd),numPlayers);
-        game.addActor(this);
+        game = new GameController(new GameBoard(brd));
+        game.addActor(gui);
 
 
         //Load the map
@@ -130,27 +130,57 @@ public class GUI extends Game implements IAgent {
 
         availableTable = new Table();
         availableTable.right();
-        availableTable.setBounds(Gdx.graphics.getWidth()/1.5f, 0, Gdx.graphics.getWidth()*0.5f, Gdx.graphics.getHeight()*0.8f);
+        availableTable.setBounds(Gdx.graphics.getWidth()/1.5f, 0, Gdx.graphics.getWidth()*0.3f, Gdx.graphics.getHeight()*0.8f);
         availableTable.setDebug(true);
+
+        Table btnTable = new Table();
         //Buttons
         nextTurn = new TextButton("Next Turn", skin);
         nextTurn.addListener(new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                ready = true;
+                availableCards.clear();
+
+                game.programRegister(gui, chosenCards);
+
+                chosenCards.clear();
+
+                chosenTable.clear();
+
+                availableCards.addAll(game.getCards(gui));
+                renderAvailableCards();
+
+                showBots(game.executeTurn(gui));
             }
         });
+
+        TextButton start = new TextButton("Start Game", skin);
+        start.addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                if(!isStarted)
+                {
+                    availableCards.addAll(game.getCards(gui));
+                    renderAvailableCards();
+                    System.out.println(availableCards);
+                    isStarted=true;
+
+                    showBots(game.getRobots());
+                }
+            }
+        });
+        btnTable.add(start, nextTurn);
+        btnTable.bottom().left();
 
         botCells.add(new TiledMapTileLayer.Cell());
         botCells.get(botCells.size()-1).setTile(new StaticTiledMapTile(new Sprite(new TextureRegion(new Texture("assets/player.png")).split(CELL_SIZE, CELL_SIZE)[0][0])));
 
-        stage.addActor(nextTurn);
+        stage.addActor(btnTable);
         stage.addActor(chosenTable);
         stage.addActor(availableTable);
 
-
-        game.startGame();
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.setColor(Color.RED);
@@ -162,50 +192,29 @@ public class GUI extends Game implements IAgent {
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         renderer.render();
         stage.draw();
-        renderAvailableCards();
-        renderChosenCards();
-    }
-    private void renderChosenCards()
-    {
-        chosenTable.clear();
-        renderer.getBatch().begin();
-        for (final ICard card : chosenCards)
-        {
-
-            final TextButton btn = new TextButton(card.toString(), skin);
-            chosenTable.add(btn);
-        }
-        renderer.getBatch().end();
     }
     private void renderAvailableCards()
     {
-        renderer.getBatch().begin();
-        for (final ICard card: availableCards) {
+        availableTable.clear();
+        int i = 0;
+        for (final ICard card: availableCards)
+        {
             final TextButton btn = new TextButton(card.toString(),skin);
             btn.addListener(new ChangeListener()
             {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
                     chosenCards.add(card);
+                    availableCards.remove(card);
                     availableTable.removeActor(btn);
+                    chosenTable.add(btn);
                 }
             });
+            i++;
             availableTable.add(btn);
+            if(i%2==0)
+                availableTable.row();
         }
-
-        renderer.getBatch().end();
-    }
-    @Override
-    public List<ICard> getChosenCards(List<ICard> availableCards, int available) {
-        availableCards.clear();
-        this.availableCards = availableCards;
-        availableCards.clear();
-        while(!ready)
-        {
-
-        }
-        ready = false;
-        return chosenCards;
     }
 
     @Override
@@ -213,8 +222,8 @@ public class GUI extends Game implements IAgent {
         return AgentType.Player;
     }
 
-    @Override
-    public void Update(List<Robot> bots) {
+    public void showBots(List<Robot> bots)
+    {
         for (Robot b : bots)
         {
             Vector2 pos = b.getRobotPos();

@@ -1,55 +1,97 @@
 package gameBoard;
 
-import com.badlogic.gdx.math.Vector2;
 import agent.IAgent;
-import cards.*;
+import cards.Again;
+import cards.ICard;
+import cards.Move;
+import cards.Turn;
+import com.badlogic.gdx.math.Vector2;
 import misc.Utils;
 
 import java.util.*;
 
-//Model
-public class GameController
-{
-    private int maxActors = 4;
+public class GameController {
+
+    private final int MAXACTORS = 4;
+    private final int HANDSIZEMAX = 10;
+
     private GameBoard gameBoard;
+
     private int botIDGen = 0;
-    private HashMap<Actor, IAgent> actorAgentRelation = new HashMap<>();
-    private HashSet<ICard> cards = new HashSet<>();
+    private HashMap<IAgent, Actor> actorAgentRelation = new HashMap<>();
 
-
-    public GameController(GameBoard game, int maxActors)
-    {
-        //TODO:Finish Constructor
-        this.gameBoard = game;
-
-        if(maxActors >= this.maxActors)
-            this.maxActors = maxActors;
-
-        generateStartingDeck();
+    public GameController(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
     }
 
     /**
-     * Add an actor to the inf112.game
+     * Get available cards
+     * @param agent
+     * @return
      */
-    public boolean addActor(IAgent agent)
+    public HashSet<ICard> getCards(IAgent agent)
     {
-        if(actorAgentRelation.size() < maxActors)
+        return actorAgentRelation.get(agent).getAvailableCards();
+    }
+
+    /**
+     * Get the register size
+     * @param agent
+     * @return
+     */
+    public int getRegisterSize(IAgent agent)
+    {
+        return actorAgentRelation.get(agent).getRegisterSize();
+    }
+
+    /**
+     * Program the registers
+     * @param agent
+     */
+    public void programRegister(IAgent agent, List<ICard> register)
+    {
+        actorAgentRelation.get(agent).clearRegisters();
+        for(ICard c:register)
         {
-            actorAgentRelation.put(new Actor(botIDGen),agent);
-            gameBoard.addBot(botIDGen);//Add bot to game with same id as actor
-            botIDGen++;
-            return true;
+            actorAgentRelation.get(agent).addCardToRegister(c);
         }
-        return false;
-    }
-    /**
-     * Starts the game
-     */
-    public void startGame()
-    {
-        drawCards();
+        //Draw as many cards as you can
+        for (int i = 0; i < gameBoard.getBot(actorAgentRelation.get(agent).getId()).getHp()-1; i++)
+        {
+            if(actorAgentRelation.get(agent).getAvailableCards().size() < HANDSIZEMAX)
+                actorAgentRelation.get(agent).addCard(getCard());
+            else
+                break;
+        }
     }
 
+    /**
+     * Does a turn
+     * @param agent - The agent doing the turn
+     * @return all the robots
+     */
+    public List<Robot> executeTurn(IAgent agent)
+    {
+        movePhase(agent);
+        activateBoardElements();
+        flagAndRepair();
+
+        List<Robot> bots = new ArrayList<>();
+        for (Actor a: actorAgentRelation.values()) {
+            bots.add(gameBoard.getBot(a.getId()));
+        }
+        return bots;
+    }
+    private void movePhase(IAgent agent)
+    {
+        Actor a = actorAgentRelation.get(agent);
+        for (int i = 0; i < a.getRegisterSize(); i++) {
+            if(a.getBotRegister()[i] != null)
+            {
+                doInstruction(a,i);
+            }
+        }
+    }
     private void doInstruction(Actor a, int instructionIndex)
     {
 
@@ -75,77 +117,6 @@ public class GameController
             gameBoard.getBot(a.getId()).setFacing(gameBoard.getBot(a.getId()).getFacing().turn(((Turn) c).turn));
         }
     }
-
-    /**
-     * Execute instructions for bots that have been shutdown
-     */
-    private void doShutDownInstructions()
-    {
-        for (Actor a : actorAgentRelation.keySet())
-        {
-            if(a.isShutDown())
-            {
-                //If the bot was shut down do all the actions now
-                for (int i = 0; i < a.getBotRegister().length; i++)
-                {
-                    doInstruction(a,i);
-                }
-                a.powerUp();
-                gameBoard.getBot(a.getId()).setHp(gameBoard.getBot(a.getId()).getMaxHp());
-            }
-        }
-        drawCards();
-    }
-
-    /**
-     * Assign cards to bot
-     */
-    private void drawCards()
-    {
-        for (Actor a: actorAgentRelation.keySet())
-        {
-            for (int i = 0; i < gameBoard.getBot(a.getId()).getHp()-1; i++)
-            {
-                ICard c = cards.iterator().next();
-                cards.remove(c);
-                a.addCard(c);
-            }
-        }
-        programRegisters();
-    }
-
-    private void programRegisters()
-    {
-        List<Thread> threads= new LinkedList<>();
-        for (final Actor a: actorAgentRelation.keySet())//TODO: THE use of final here may cause trouble, in case of bugs check this
-        {
-            a.clearRegisters();
-            List<ICard> chosen = new ArrayList<>();
-            chosen.addAll(a.getAvailableCards());
-            for (ICard c : actorAgentRelation.get(a).getChosenCards(chosen, a.getRegisterSize())) {
-                a.addCardToRegister(c);
-            }
-        }
-        movePhase();
-    }
-
-    private void movePhase()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            for (Actor a: actorAgentRelation.keySet())
-            {
-                if(a.isShutDown())
-                    continue;
-                if(a.getBotRegister()[i] != null)
-                {
-                    doInstruction(a,i);
-                }
-            }
-            activateBoardElements();
-            flagAndRepair();
-        }
-    }
     private void activateBoardElements()
     {
         gameBoard.updateBoardElements();
@@ -153,22 +124,44 @@ public class GameController
     private void flagAndRepair()
     {
         gameBoard.updateBotStatus();
-
-        for (Actor a: actorAgentRelation.keySet())
+        for (Actor a: actorAgentRelation.values())
         {
             a.updateRegisterSize(gameBoard.getBot(a.getId()).getHp());
         }
     }
 
     /**
+     * Add an actor to the game
+     */
+    public boolean addActor(IAgent agent)
+    {
+        if(actorAgentRelation.size() < MAXACTORS)
+        {
+            actorAgentRelation.put(agent, new Actor(botIDGen));
+            gameBoard.addBot(botIDGen);//Add bot to game with same id as actor
+            botIDGen++;
+            for (int i = 0; i < HANDSIZEMAX; i++) {
+                actorAgentRelation.get(agent).addCard(getCard());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Generate 100 random cards and add them to the card deck
      */
-    public void generateStartingDeck()
+    private ICard getCard()
     {
         Random rnd = new Random();
-        for (int i = 0; i < 100; i++)
-        {
-            cards.add(Utils.getCard(rnd.nextInt(8)));
+        return Utils.getCard(rnd.nextInt(8));
+    }
+    public List<Robot> getRobots()
+    {
+        List<Robot> retList = new ArrayList<>();
+        for (Actor a: actorAgentRelation.values()) {
+            retList.add(gameBoard.getBot(a.getId()));
         }
+        return retList;
     }
 }

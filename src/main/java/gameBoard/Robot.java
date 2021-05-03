@@ -14,12 +14,13 @@ public class Robot
     private Vector2 spawnPoint;
 
 
-    public Robot(int id, int hp, int nextFlagID, Vector2 currPos, Facing facing)
+    public Robot(int id, int hp, int nextFlagID, Vector2 spawnPoint, Facing facing)
     {
         this.id = id;
         this.hp = hp;
         this.nextFlagID = nextFlagID;
-        this.currPos = currPos;
+        this.spawnPoint = spawnPoint;
+        this.currPos = spawnPoint;
         this.facing = facing;
     }
 
