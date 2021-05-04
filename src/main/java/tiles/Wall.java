@@ -25,9 +25,11 @@ public class Wall implements ITile
      */
     public static boolean canMoveToFromThis(Vector2 pos, Vector2 wallPos, Wall wl)
     {
+        Vector2 pp = new Vector2(pos);
+        Vector2 wp = new Vector2(wallPos);
         for (Facing f: wl.getWalls())
         {
-            if(wallPos.add(f).equals(pos))
+            if(wp.add(f).equals(pp))
                 return false;
         }
         return true;

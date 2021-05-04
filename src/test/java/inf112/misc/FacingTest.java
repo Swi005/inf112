@@ -4,49 +4,31 @@ import junit.framework.TestCase;
 import misc.Facing;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class FacingTest extends TestCase
 {
     @Test
     public void TestArgumentsAreEqual()
     {
-        IllegalArgumentException ex = new IllegalArgumentException();
-        try
-        {
-            Facing f = new Facing(0,0);
-        }
-        catch(IllegalArgumentException e)
-        {
-            ex = e;
-        }
-        assertEquals(ex.getMessage(), "Invalid facing");
+        assertThrows(IllegalArgumentException.class, () ->{
+                new Facing(0, 0);
+        });
     }
     @Test
     public void TestArgumentsAreBothNotZero()
     {
-        IllegalArgumentException ex = new IllegalArgumentException();
-        try
-        {
-            Facing f = new Facing(1,-1);
-        }
-        catch(IllegalArgumentException e)
-        {
-            ex = e;
-        }
-        assertEquals(ex.getMessage(), "Invalid facing");
+        assertThrows(IllegalArgumentException.class, () ->{
+            new Facing(1, -1);
+        });
     }
     @Test
     public void TestArgumentOutOfBounds()
     {
-        IllegalArgumentException ex = new IllegalArgumentException();
-        try
-        {
-            Facing f = new Facing(15,0);
-        }
-        catch(IllegalArgumentException e)
-        {
-            ex = e;
-        }
-        assertEquals(ex.getMessage(), "Argument is out of bounds");
+        assertThrows(IllegalArgumentException.class, () ->{
+            new Facing(15, 0);
+        });
+
     }
     @Test
     public void testInputAsString()

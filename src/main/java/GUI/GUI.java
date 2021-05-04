@@ -262,7 +262,9 @@ public class GUI extends Game implements IAgent {
 
             botCells.get(b.getId()).setRotation(b.getFacing().getDegrees()-1);
             playerLayer.setCell((int)pos.y,(int)pos.x,botCells.get(b.getId()));
-            System.out.println("Player at x:" + pos.x +" y: " + pos.y);
+            System.out.println("Bot at x:" + pos.x +" y: " + pos.y);
+            System.out.println("Bot is facing "+b.getFacing().toString());
+            System.out.println("Bot has " + b.getHp() + "HP");
         }
     }
 }

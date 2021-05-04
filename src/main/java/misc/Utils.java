@@ -25,23 +25,19 @@ public class Utils
      */
     public static ArrayList<Vector2>  findPath(ArrayList<Vector2> visited, int n, Facing direction, GameBoard game, Vector2 currPos)
     {
-        ArrayList<Vector2> _visited = (ArrayList<Vector2>) visited.clone();
-        try {
+        if(Utils.isWithinBounds(currPos, game.getHeight(), game.getHeight()))
+        {
             //add current pos
-            _visited.add(currPos);
-            if(n != -1)
-                n--;
+            visited.add(currPos);
             //Check if its possible to go to the next inf112.tile and that n isn't zero
-            if(n >= 0 && game.canGo(currPos, currPos.cpy().add(direction)) )
+            if(n != 0 && game.canGo(currPos, currPos.cpy().add(direction)))
             {
-                return findPath(_visited, n, direction, game, currPos.cpy().add(direction));
+                if(n != -1)
+                    n--;
+                return findPath(visited, n, direction, game, currPos.cpy().add(direction));
             }
         }
-        catch (Exception e)
-        {
-            return _visited;
-        }
-        return _visited;
+        return visited;
     }
 
     /**
@@ -223,9 +219,8 @@ public class Utils
         }
     }
 
-    public static boolean isWithinBounds(Robot b, int maxX, int maxY)
+    public static boolean isWithinBounds(Vector2 botPos, int maxX, int maxY)
     {
-        Vector2 botPos = b.getRobotPos();
         return !(botPos.y >= maxY || botPos.y < 0 || botPos.x < 0 || botPos.x >= maxX);
     }
 }

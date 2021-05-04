@@ -57,17 +57,11 @@ public class Robot
     }
     public void doDamage(int dmg)
     {
-        if(this.hp >= dmg)
-            this.hp -=dmg;
-        else
-            this.hp = 0;
+        this.setHp(this.getHp()-dmg);
     }
     public void repair(int points)
     {
-        if(hp+points < maxHp)
-            hp = maxHp;
-        else
-            hp += points;
+        this.setHp(this.getHp()+points);
     }
     public void setFacing(Facing facing) {
         this.facing = facing.copy();
@@ -92,6 +86,8 @@ public class Robot
     {
         if(hp >= maxHp)
             this.hp = maxHp;
+        if(hp<=0)
+            this.hp = 0;
         else
             this.hp = hp;
     }

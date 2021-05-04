@@ -18,8 +18,8 @@ public class GameBoard
     private ITile[][] board;
     private List<Robot> bots = new ArrayList<>();
     private final HashMap<Integer,Vector2> flagPos = new HashMap<>();
-    private final List<Vector2> lasers = new ArrayList<>(10);
-    private final HashMap<Integer,Vector2> spawnpoints = new HashMap<Integer,Vector2>();
+    private final HashMap<Laser, Vector2> lasers = new HashMap<>();
+    private final HashMap<Integer,Vector2> spawnpoints = new HashMap<>();
 
     public GameBoard(ITile[][] board)
     {
@@ -30,7 +30,7 @@ public class GameBoard
                 if(board[x][y] instanceof Flag)
                     flagPos.put(((Flag)board[x][y]).getFlagId(),new Vector2(x,y));
                 else if(board[x][y] instanceof Laser)
-                    lasers.add(new Vector2(x,y));
+                    lasers.put((Laser)board[x][y], new Vector2(x,y));
                 else if(board[x][y] instanceof Spawnpoint)
                     spawnpoints.put(((Spawnpoint) board[x][y]).ID, new Vector2(x,y));
             }
@@ -51,7 +51,7 @@ public class GameBoard
             Robot bot = robotQueue.removeFirst();
             Vector2 botPos = bot.getRobotPos();
 
-            if(!Utils.isWithinBounds(bot, board.length, board[0].length)) {
+            if(!Utils.isWithinBounds(bot.getRobotPos(), board.length, board[0].length)) {
                 bot.setRobotPos(bot.getSpawnPoint());
                 continue;
             }
@@ -63,26 +63,23 @@ public class GameBoard
                     bot.setRobotPos(botPos.add(((Pusher) board[(int) botPos.x][(int) botPos.y]).getPushDirection()));
                     robotQueue.addLast(bot);
                 }
-            /*
-            if(board[(int) botPos.x][(int)botPos.y] instanceof Flag)
-                if(((Flag)board[(int) botPos.x][(int)botPos.y]).getFlagId() == bot.getNextFlag()) {
-                    if(!flagPos.containsKey(bot.getNextFlag()+1))
-                        bot.setNextFlag(-1);
-                    else
-                        bot.setNextFlag(bot.getNextFlag()+1);
-                    bot.setSpawnPoint(botPos);
-                }*/
+        }
+        for (Laser l:lasers.keySet())
+        {
+            for (Robot b: bots) {
+                List<Vector2> t = Utils.findPath(new ArrayList<Vector2>(), -1, l.getFacing(),this,lasers.get(l));
+                if(Utils.findPath(new ArrayList<Vector2>(), -1, l.getFacing(),this,lasers.get(l)).contains(b.getRobotPos()))
+                    b.doDamage(l.getDamage());
+            }
         }
     }
 
     //TODO:test this
     public boolean canGo(Vector2 from, Vector2 too)//Make private maybe?
     {
-        //Check that there isn't a bot in the 'too' location
-        for (Robot b: bots) {
-            if(b.getRobotPos() == too)
-                return false;
-        }
+        if(!Utils.isWithinBounds(too, this.getHeight(), this.getWidth()))
+            return false;
+
         if(board[(int)too.x][(int)too.y].equals(null))
             return false;
         if(board[(int)too.x][(int)too.y] instanceof Wall || board[(int)too.x][(int)too.y] instanceof Laser)
@@ -92,7 +89,7 @@ public class GameBoard
         }
         if(board[(int)from.x][(int)from.y] instanceof Wall || board[(int)from.x][(int)from.y] instanceof Laser)
         {
-            return Wall.canMoveToFromThis(from, too, (Wall) board[(int) from.x][(int) from.y]);
+            return Wall.canMoveToFromThis(too, from, (Wall) board[(int) from.x][(int) from.y]);
         }
         return true;
     }
@@ -105,7 +102,7 @@ public class GameBoard
     public void checkOutOfBounds()
     {
         for (Robot bot:bots) {
-            if(!Utils.isWithinBounds(bot, this.getHeight(), this.getWidth())) {
+            if(!Utils.isWithinBounds(bot.getRobotPos(), this.getHeight(), this.getWidth())) {
                 System.out.println("Robot is out of bounds at x: " + bot.getRobotPos().x + " y: " + bot.getRobotPos().y);
                 bot.setFacing(new Facing("North"));
                 bot.setRobotPos(bot.getSpawnPoint());
@@ -131,7 +128,7 @@ public class GameBoard
     public void updateBotStatus()
     {
         for (Robot bot: bots) {
-            if(!Utils.isWithinBounds(bot, board.length, board[0].length)) {
+            if(!Utils.isWithinBounds(bot.getRobotPos(), board.length, board[0].length)) {
                 bot.setRobotPos(bot.getSpawnPoint());
                 continue;
             }
