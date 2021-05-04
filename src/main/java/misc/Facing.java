@@ -10,27 +10,13 @@ public class Facing extends Vector2 {
     public Facing(int NS, int EW) {
         super(NS, EW);
         //Following code is for checking that its a valid facing
-        if (NS == EW) {
-            throw new IllegalArgumentException("Invalid facing");
-
-        }
-        if (NS == 0) {
-            if (EW != 1)
-                if (EW != -1) {
-                    throw new IllegalArgumentException("Argument is out of bounds");
-                }
-        }
-        if (EW == 0) {
-            if (NS != 1)
-                if (NS != -1) {
-                    throw new IllegalArgumentException("Argument is out of bounds");
-                }
-
-        }
+        if (NS == EW) throw new IllegalArgumentException("Invalid facing");
+        if (NS == 0) if (EW != 1)
+            if (EW != -1) throw new IllegalArgumentException("Argument is out of bounds");
+        if (EW == 0) if (NS != 1)
+            if (NS != -1) throw new IllegalArgumentException("Argument is out of bounds");
         if (NS != 0)
-            if (EW != 0) {
-                throw new IllegalArgumentException("Invalid facing");
-            }
+            if (EW != 0) throw new IllegalArgumentException("Invalid facing");
     }
 
     public Facing(String facing) {

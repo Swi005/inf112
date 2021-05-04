@@ -43,31 +43,24 @@ public class GUI extends Game implements IAgent {
     //Consts
     private final int CELL_SIZE = 300;
     private final GUI gui;
+    //constructor args
+    private final String mapPath;
+    private final List<TiledMapTileLayer.Cell> botCells = new ArrayList<>();
+    private final List<ICard> availableCards = new ArrayList<>();
+    private final List<ICard> chosenCards = new ArrayList<>();
     //Buttons
     protected TextButton nextTurn; //Do the next turn
-    private int height;
-    private int width;
     //Stage
     private Stage stage;
     private Skin skin;
     private GameController game;
-    private BitmapFont font;
     //Flags
     private boolean isStarted = false;
-    //constructor args
-    private final String mapPath;
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer boardLayer;
     private OrthogonalTiledMapRenderer renderer;
-    private OrthographicCamera camera;
-    //Viewport
-    private Viewport appView;
     //Tables
     private Table availableTable;//Available cards
     private Table chosenTable; // Cards chosen by player
-    private final List<TiledMapTileLayer.Cell> botCells = new ArrayList<>();
-    private final List<ICard> availableCards = new ArrayList<>();
-    private final List<ICard> chosenCards = new ArrayList<>();
 
     public GUI(String mapPath) {
         super();
@@ -86,17 +79,18 @@ public class GUI extends Game implements IAgent {
 
         //Load the map
         TiledMap map = new TmxMapLoader().load(mapPath);
-        boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
+        TiledMapTileLayer boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
         playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
 
-        height = boardLayer.getHeight() * CELL_SIZE;
-        width = boardLayer.getWidth() * CELL_SIZE;
+        int height = boardLayer.getHeight() * CELL_SIZE;
+        int width = boardLayer.getWidth() * CELL_SIZE;
 
 
-        appView = new FitViewport(width * 1.5f, height * 1.2f);
+        //Viewport
+        Viewport appView = new FitViewport(width * 1.5f, height * 1.2f);
         appView.update(width, height, true);
 
-        camera = (OrthographicCamera) appView.getCamera();
+        OrthographicCamera camera = (OrthographicCamera) appView.getCamera();
         camera.update();
 
         //Renderer
@@ -182,8 +176,7 @@ public class GUI extends Game implements IAgent {
         stage.addActor(chosenTable);
         stage.addActor(availableTable);
 
-        SpriteBatch batch = new SpriteBatch();
-        font = new BitmapFont();
+        BitmapFont font = new BitmapFont();
         font.setColor(Color.RED);
     }
 
