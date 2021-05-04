@@ -9,8 +9,25 @@ public class Turn implements ICard
     {
         this.turn = f;
     }
+
+    private String convertFromCompassToDir(String dir)
+    {
+        switch (dir.toLowerCase())
+        {
+            case "north":
+                return "Ahead";
+            case "west":
+                return "Left";
+            case "east":
+                return "Right";
+            case "south":
+                return "Back";
+            default:
+                throw new IllegalArgumentException("Expected a compass direction, recieved: " + dir);
+        }
+    }
     @Override
     public String toString() {
-        return "Turn: " + turn.toString();
+        return "Turn: " + convertFromCompassToDir(turn.toString());
     }
 }

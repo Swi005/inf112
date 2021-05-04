@@ -34,14 +34,14 @@ public class BoardParser
                     {
                         reader.nextLine();//skip encoding line
                         String s = reader.nextLine();
-                        int h = 0;
+                        int h = board.length-1;
                         while(!s.equals("</data>"))
                         {
                             String[] tilesLine = s.split("[,]");
                             for (int i = 0; i < tilesLine.length; i++) {
                                 board[h][i] = Utils.toTile(Integer.parseInt(tilesLine[i]));
                             }
-                            h++;
+                            h--;
                             s = reader.nextLine();
                         }
                         return board;

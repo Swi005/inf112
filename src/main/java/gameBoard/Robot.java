@@ -19,8 +19,8 @@ public class Robot
         this.id = id;
         this.hp = hp;
         this.nextFlagID = nextFlagID;
-        this.spawnPoint = spawnPoint;
-        this.currPos = spawnPoint;
+        this.spawnPoint = spawnPoint.cpy();
+        this.currPos = spawnPoint.cpy();
         this.facing = facing;
     }
 
@@ -30,7 +30,7 @@ public class Robot
      */
     public void setRobotPos(Vector2 newPos)
     {
-        this.currPos = newPos;
+        this.currPos = newPos.cpy();
     }
 
     /**
@@ -39,7 +39,7 @@ public class Robot
      */
     public Vector2 getRobotPos()
     {
-        return this.currPos;
+        return this.currPos.cpy();
     }
 
     /**
@@ -57,40 +57,37 @@ public class Robot
     }
     public void doDamage(int dmg)
     {
-        if(this.hp >= dmg)
-            this.hp -=dmg;
-        else
-            this.hp = 0;
+        this.setHp(this.getHp()-dmg);
     }
     public void repair(int points)
     {
-        if(hp+points < maxHp)
-            hp = maxHp;
-        else
-            hp += points;
+        this.setHp(this.getHp()+points);
     }
     public void setFacing(Facing facing) {
-        this.facing = facing;
+        this.facing = facing.copy();
     }
     public Facing getFacing()
     {
-        return this.facing;
+        return this.facing.copy();
     }
     public int getId() {
         return id;
     }
 
     public Vector2 getSpawnPoint() {
-        return spawnPoint;
+        return spawnPoint.cpy();
     }
 
     public void setSpawnPoint(Vector2 spawnPoint) {
-        this.spawnPoint = spawnPoint;
+        this.spawnPoint = spawnPoint.cpy();
     }
 
-    public void setHp(int hp) {
+    public void setHp(int hp)
+    {
         if(hp >= maxHp)
             this.hp = maxHp;
+        if(hp<=0)
+            this.hp = 0;
         else
             this.hp = hp;
     }

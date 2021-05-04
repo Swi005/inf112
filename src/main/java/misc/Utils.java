@@ -3,6 +3,7 @@ package misc;
 import cards.*;
 import com.badlogic.gdx.math.Vector2;
 import gameBoard.GameBoard;
+import gameBoard.Robot;
 import tiles.*;
 
 import java.util.ArrayList;
@@ -24,14 +25,17 @@ public class Utils
      */
     public static ArrayList<Vector2>  findPath(ArrayList<Vector2> visited, int n, Facing direction, GameBoard game, Vector2 currPos)
     {
-        //add current pos
-        visited.add(currPos);
-        if(n != -1)
-           n--;
-        //Check if its possible to go to the next inf112.tile and that n isn't zero
-        if(game.canGo(currPos, currPos.add(direction)) && n != 0)
+        if(Utils.isWithinBounds(currPos, game.getHeight(), game.getHeight()))
         {
-            return findPath(visited, n, direction, game, currPos.add(direction));
+            //add current pos
+            visited.add(currPos);
+            //Check if its possible to go to the next inf112.tile and that n isn't zero
+            if(n != 0 && game.canGo(currPos, currPos.cpy().add(direction)))
+            {
+                if(n != -1)
+                    n--;
+                return findPath(visited, n, direction, game, currPos.cpy().add(direction));
+            }
         }
         return visited;
     }
@@ -213,5 +217,10 @@ public class Utils
             default:
                 return new Turn(new Facing("South"));
         }
+    }
+
+    public static boolean isWithinBounds(Vector2 botPos, int maxX, int maxY)
+    {
+        return !(botPos.y >= maxY || botPos.y < 0 || botPos.x < 0 || botPos.x >= maxX);
     }
 }
