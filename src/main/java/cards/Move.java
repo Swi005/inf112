@@ -1,10 +1,9 @@
 package cards;
 
-public class Move implements ICard
-{
+public class Move implements ICard {
     public int moveLen;
-    public Move(int move)
-    {
+
+    public Move(int move) {
         this.moveLen = move;
     }
 

@@ -2,18 +2,15 @@ package cards;
 
 import misc.Facing;
 
-public class Turn implements ICard
-{
+public class Turn implements ICard {
     public Facing turn;
-    public Turn(Facing f)
-    {
+
+    public Turn(Facing f) {
         this.turn = f;
     }
 
-    private String convertFromCompassToDir(String dir)
-    {
-        switch (dir.toLowerCase())
-        {
+    private String convertFromCompassToDir(String dir) {
+        switch (dir.toLowerCase()) {
             case "north":
                 return "Ahead";
             case "west":
@@ -26,6 +23,7 @@ public class Turn implements ICard
                 throw new IllegalArgumentException("Expected a compass direction, recieved: " + dir);
         }
     }
+
     @Override
     public String toString() {
         return "Turn: " + convertFromCompassToDir(turn.toString());

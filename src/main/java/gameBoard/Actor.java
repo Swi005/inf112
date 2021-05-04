@@ -8,8 +8,7 @@ import java.util.HashSet;
 /**
  * This class represents a player or ai in the inf112.game.
  */
-public class Actor
-{
+public class Actor {
     private final int id;
     private final HashSet<ICard> availableCards = new HashSet<>();
 
@@ -17,34 +16,31 @@ public class Actor
     private final ICard[] botRegister = new ICard[registerSize];
 
     private boolean shutDown;
-    public Actor(int id)
-    {
+
+    public Actor(int id) {
         this.id = id;
     }
 
     /**
      * Adds a card to this actors available cards
+     *
      * @param card
      */
-    public void addCard(ICard card)
-    {
+    public void addCard(ICard card) {
         availableCards.add(card);
     }
 
     /**
      * Adds a card to the register
+     *
      * @param card a card
      * @return
      */
-    public boolean addCardToRegister(ICard card)
-    {
-        if(availableCards.contains(card))
-        {
+    public boolean addCardToRegister(ICard card) {
+        if (availableCards.contains(card)) {
             //For loop too check that the card is added as early as possible in the register
-            for (int i = 0; i < registerSize; i++)
-            {
-                if(botRegister[i] == null)
-                {
+            for (int i = 0; i < registerSize; i++) {
+                if (botRegister[i] == null) {
                     botRegister[i] = card;
                     availableCards.remove(card);//remove the card that is to be added
                     return true;
@@ -56,12 +52,12 @@ public class Actor
 
     /**
      * Lock registers on damage
+     *
      * @param botHp
      */
-    public void updateRegisterSize(int botHp)
-    {
-        if(botHp<6)
-            registerSize = botHp-1;
+    public void updateRegisterSize(int botHp) {
+        if (botHp < 6)
+            registerSize = botHp - 1;
         else
             registerSize = 5;
     }
@@ -69,9 +65,8 @@ public class Actor
     /**
      * Clears the register of cards
      */
-    public void clearRegisters()
-    {
-        for (int i = 0; i <registerSize; i++) {
+    public void clearRegisters() {
+        for (int i = 0; i < registerSize; i++) {
             botRegister[i] = null;
         }
     }
@@ -84,26 +79,24 @@ public class Actor
     public ICard[] getBotRegister() {
         return botRegister;
     }
-    public void shutDown()
-    {
+
+    public void shutDown() {
         shutDown = true;
     }
-    public boolean isShutDown()
-    {
+
+    public boolean isShutDown() {
         return shutDown;
     }
-    public void powerUp()
-    {
+
+    public void powerUp() {
         shutDown = false;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public HashSet<ICard> getAvailableCards()
-    {
+    public HashSet<ICard> getAvailableCards() {
         return availableCards;
     }
 }

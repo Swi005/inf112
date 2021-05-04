@@ -6,37 +6,30 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class BoardParser
-{
-    public static ITile[][] parseBoard(String path)
-    {
+public class BoardParser {
+    public static ITile[][] parseBoard(String path) {
         File file = new File(path);
         ITile[][] board = null;
-        try{
+        try {
             Scanner reader = new Scanner(file);
 
-            while(reader.hasNextLine())
-            {
+            while (reader.hasNextLine()) {
                 String line = reader.nextLine();
                 String[] comp = line.split("\\s");
                 //look for size of board
-                if(comp[0].equals("<map"))
-                {
+                if (comp[0].equals("<map")) {
                     String w = comp[5].split("[\"]")[1];
                     String h = comp[6].split("[\"]")[1];
                     board = new ITile[Integer.parseInt(w)][Integer.parseInt(h)];
                     continue; //jump to next line
                 }
 
-                for (String n:comp)
-                {
-                    if (n.equals("name=\"Board\""))
-                    {
+                for (String n : comp) {
+                    if (n.equals("name=\"Board\"")) {
                         reader.nextLine();//skip encoding line
                         String s = reader.nextLine();
-                        int h = board.length-1;
-                        while(!s.equals("</data>"))
-                        {
+                        int h = board.length - 1;
+                        while (!s.equals("</data>")) {
                             String[] tilesLine = s.split("[,]");
                             for (int i = 0; i < tilesLine.length; i++) {
                                 board[h][i] = Utils.toTile(Integer.parseInt(tilesLine[i]));
@@ -49,8 +42,7 @@ public class BoardParser
                 }
             }
             reader.close();
-        }catch(FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             return null;
         }
         return null;

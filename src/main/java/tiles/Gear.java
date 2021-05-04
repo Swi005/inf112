@@ -1,7 +1,6 @@
 package tiles;
 
-public class Gear implements ITile
-{
+public class Gear implements ITile {
 
     @Override
     public int priority() {

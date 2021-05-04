@@ -1,28 +1,25 @@
 package inf112.game;
 
-import gameBoard.Actor;
 import cards.ICard;
+import gameBoard.Actor;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-class TestCard implements ICard
-{
+class TestCard implements ICard {
     public int id;
-    public TestCard(int id)
-    {
+
+    public TestCard(int id) {
         this.id = id;
     }
 }
 
-class ActorTest extends TestCase
-{
+class ActorTest extends TestCase {
     @Test
-    void getAvailableCards()
-    {
+    void getAvailableCards() {
         Actor a = new Actor(0);
         HashSet<ICard> cards = new HashSet<>();
         TestCard t0 = new TestCard(0);
@@ -42,22 +39,19 @@ class ActorTest extends TestCase
     }
 
     @Test
-    void addCard()
-    {
+    void addCard() {
         Actor a = new Actor(0);
         a.addCard(new TestCard(0));
         a.addCard(new TestCard(1));
         a.addCard(new TestCard(2));
         a.addCard(new TestCard(3));
-        boolean hasRightID = true;
 
         assertEquals(a.getAvailableCards().size(), 4);
     }
 
 
     @Test
-    void addCardToRegister()
-    {
+    void addCardToRegister() {
         Actor a = new Actor(0);
         TestCard t0 = new TestCard(0);
         a.addCard(t0);
@@ -79,16 +73,14 @@ class ActorTest extends TestCase
     }
 
     @Test
-    void updateRegisterSize()
-    {
+    void updateRegisterSize() {
         Actor a = new Actor(0);
         a.updateRegisterSize(4);
         assertEquals(a.getRegisterSize(), 3);
     }
 
     @Test
-    void clearRegisters()
-    {
+    void clearRegisters() {
         Actor a = new Actor(0);
 
         TestCard t0 = new TestCard(0);
