@@ -104,8 +104,8 @@ public class GameController {
             return;
         if(c instanceof Move)
         {
-            for (Vector2 pos: Utils.findPath(new ArrayList<Vector2>(), ((Move) c).moveLen, gameBoard.getBot(a.getId()).getFacing(),gameBoard, gameBoard.getBot(a.getId()).getRobotPos()))
-                gameBoard.getBot(a.getId()).setRobotPos(pos);
+            List<Vector2> pos = Utils.findPath(new ArrayList<Vector2>(), ((Move) c).moveLen, gameBoard.getBot(a.getId()).getFacing(),gameBoard, gameBoard.getBot(a.getId()).getRobotPos());
+            gameBoard.getBot(a.getId()).setRobotPos(pos.get(pos.size()-1));
         }
         if(c instanceof Turn)
         {

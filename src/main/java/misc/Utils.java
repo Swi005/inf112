@@ -25,22 +25,23 @@ public class Utils
      */
     public static ArrayList<Vector2>  findPath(ArrayList<Vector2> visited, int n, Facing direction, GameBoard game, Vector2 currPos)
     {
+        ArrayList<Vector2> _visited = (ArrayList<Vector2>) visited.clone();
         try {
             //add current pos
-            visited.add(currPos);
+            _visited.add(currPos);
             if(n != -1)
                 n--;
             //Check if its possible to go to the next inf112.tile and that n isn't zero
-            if(game.canGo(currPos, currPos.add(direction)) && n != 0)
+            if(game.canGo(currPos, currPos.cpy().add(direction)) && n >= 0)
             {
-                return findPath(visited, n, direction, game, currPos.add(direction));
+                return findPath(_visited, n, direction, game, currPos.cpy().add(direction));
             }
         }
         catch (Exception e)
         {
-            return visited;
+            return _visited;
         }
-        return visited;
+        return _visited;
     }
 
     /**
