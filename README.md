@@ -4,13 +4,10 @@ Roborally for INF112.
 
 ## Running the program(Windows only for now)
 ### Requirements
-* Up-to-date Maven and Java installs
+* Up-to-date Java install
 
 ### How to install
-1. Open cmd and cd to the project
-2. Run ``mvn compile``
-3. Run ``mvn package``
-4. Run ``java -jar target/RoboRally-1.0-SNAPSHOT.jar``
+1. Just download and run the .jar
 ## Known bugs
 * Not possible to run the jar at the moment
 * Still missing a lot of features
