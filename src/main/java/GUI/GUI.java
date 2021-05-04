@@ -5,7 +5,6 @@ import agent.IAgent;
 import cards.ICard;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
@@ -42,80 +41,56 @@ import java.util.List;
 public class GUI extends Game implements IAgent {
 
     //Consts
-    private final int CELL_SIZE =300;
-
+    private final int CELL_SIZE = 300;
+    private final GUI gui;
+    //constructor args
+    private final String mapPath;
+    private final List<TiledMapTileLayer.Cell> botCells = new ArrayList<>();
+    private final List<ICard> availableCards = new ArrayList<>();
+    private final List<ICard> chosenCards = new ArrayList<>();
+    //Buttons
+    protected TextButton nextTurn; //Do the next turn
+    //Stage
+    private Stage stage;
     private Skin skin;
     private GameController game;
-
-    private SpriteBatch batch;
-    private BitmapFont font;
-
-    int height;
-    int width;
-
     //Flags
     private boolean isStarted = false;
-
-    //constructor args
-    private String mapPath;
-
-
     private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer boardLayer;
     private OrthogonalTiledMapRenderer renderer;
-    private OrthographicCamera camera;
-
-    //Viewport
-    private Viewport appView;
-
-    //Stage
-    Stage stage;
-
     //Tables
     private Table availableTable;//Available cards
     private Table chosenTable; // Cards chosen by player
 
-    //Buttons
-    protected TextButton nextTurn; //Do the next turn
-
-    private List<TiledMapTileLayer.Cell> botCells = new ArrayList<>();
-    private List<ICard> availableCards = new ArrayList<>();
-    private List<ICard> chosenCards = new ArrayList<>();
-
-    private final GUI gui;
-
-    public GUI(String mapPath)
-    {
+    public GUI(String mapPath) {
         super();
         this.gui = this;
         this.mapPath = mapPath;
     }
 
     @Override
-    public void create()
-    {
+    public void create() {
         //Setup game and add this as a player
         skin = new Skin(new FileHandle("assets/skin/uiskin.json"));
-        ITile[][] brd= BoardParser.parseBoard("assets/tileMap.tmx");
+        ITile[][] brd = BoardParser.parseBoard("assets/tileMap.tmx");
         game = new GameController(new GameBoard(brd));
         game.addActor(gui);
 
 
         //Load the map
         TiledMap map = new TmxMapLoader().load(mapPath);
-        boardLayer = (TiledMapTileLayer)map.getLayers().get("Board");
-        playerLayer = (TiledMapTileLayer)map.getLayers().get("Player");
+        TiledMapTileLayer boardLayer = (TiledMapTileLayer) map.getLayers().get("Board");
+        playerLayer = (TiledMapTileLayer) map.getLayers().get("Player");
 
-        height = boardLayer.getHeight() * CELL_SIZE;
-        width = boardLayer.getWidth() * CELL_SIZE;
+        int height = boardLayer.getHeight() * CELL_SIZE;
+        int width = boardLayer.getWidth() * CELL_SIZE;
 
 
+        //Viewport
+        Viewport appView = new FitViewport(width * 1.5f, height * 1.2f);
+        appView.update(width, height, true);
 
-        Viewport gameBoardView = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        appView= new FitViewport(width * 1.5f, height*1.2f);
-        appView.update(width, height,true);
-
-        camera = (OrthographicCamera) appView.getCamera();
+        OrthographicCamera camera = (OrthographicCamera) appView.getCamera();
         camera.update();
 
         //Renderer
@@ -127,23 +102,21 @@ public class GUI extends Game implements IAgent {
         Gdx.input.setInputProcessor(stage);
         chosenTable = new Table();
         chosenTable.left().top();
-        chosenTable.setBounds(0, Gdx.graphics.getHeight()/1.2f,Gdx.graphics.getWidth(), Gdx.graphics.getHeight()*0.2f);
+        chosenTable.setBounds(0, Gdx.graphics.getHeight() / 1.2f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() * 0.2f);
         chosenTable.setDebug(true);
 
         availableTable = new Table();
         availableTable.right();
-        availableTable.setBounds(Gdx.graphics.getWidth()/1.5f, 0, Gdx.graphics.getWidth()*0.3f, Gdx.graphics.getHeight()*0.8f);
+        availableTable.setBounds(Gdx.graphics.getWidth() / 1.5f, 0, Gdx.graphics.getWidth() * 0.3f, Gdx.graphics.getHeight() * 0.8f);
         availableTable.setDebug(true);
 
         Table btnTable = new Table();
         //Buttons
         nextTurn = new TextButton("Next Turn", skin);
-        nextTurn.addListener(new ChangeListener()
-        {
+        nextTurn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                if(isStarted)
-                {
+                if (isStarted) {
                     availableCards.clear();
 
                     game.programRegister(gui, chosenCards);
@@ -157,8 +130,7 @@ public class GUI extends Game implements IAgent {
 
                     showBots(game.executeTurn(gui));
 
-                    if(game.checkWin())
-                    {
+                    if (game.checkWin()) {
                         Dialog dialog = new Dialog("Victory", skin) {
                             public void result(Object obj) {
 
@@ -181,16 +153,14 @@ public class GUI extends Game implements IAgent {
         });
 
         TextButton start = new TextButton("Start Game", skin);
-        start.addListener(new ChangeListener()
-        {
+        start.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                if(!isStarted)
-                {
+                if (!isStarted) {
                     availableCards.addAll(game.getCards(gui));
                     renderAvailableCards();
                     System.out.println(availableCards);
-                    isStarted=true;
+                    isStarted = true;
 
                     showBots(game.getRobots());
                 }
@@ -200,14 +170,13 @@ public class GUI extends Game implements IAgent {
         btnTable.bottom().left();
 
         botCells.add(new TiledMapTileLayer.Cell());
-        botCells.get(botCells.size()-1).setTile(new StaticTiledMapTile(new Sprite(new TextureRegion(new Texture("assets/player.png")).split(CELL_SIZE, CELL_SIZE)[0][0])));
+        botCells.get(botCells.size() - 1).setTile(new StaticTiledMapTile(new Sprite(new TextureRegion(new Texture("assets/player.png")).split(CELL_SIZE, CELL_SIZE)[0][0])));
 
         stage.addActor(btnTable);
         stage.addActor(chosenTable);
         stage.addActor(availableTable);
 
-        batch = new SpriteBatch();
-        font = new BitmapFont();
+        BitmapFont font = new BitmapFont();
         font.setColor(Color.RED);
     }
 
@@ -218,18 +187,16 @@ public class GUI extends Game implements IAgent {
         renderer.render();
         stage.draw();
     }
-    private void renderAvailableCards()
-    {
+
+    private void renderAvailableCards() {
         availableTable.clear();
         int i = 0;
-        for (final ICard card: availableCards)
-        {
-            final TextButton btn = new TextButton(card.toString(),skin);
-            btn.addListener(new ChangeListener()
-            {
+        for (final ICard card : availableCards) {
+            final TextButton btn = new TextButton(card.toString(), skin);
+            btn.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent changeEvent, Actor actor) {
-                    if(chosenCards.size()<= game.getRegisterSize(gui)) {
+                    if (chosenCards.size() <= game.getRegisterSize(gui)) {
                         chosenCards.add(card);
                         availableCards.remove(card);
                         availableTable.removeActor(btn);
@@ -239,7 +206,7 @@ public class GUI extends Game implements IAgent {
             });
             i++;
             availableTable.add(btn);
-            if(i%2==0)
+            if (i % 2 == 0)
                 availableTable.row();
         }
     }
@@ -249,21 +216,19 @@ public class GUI extends Game implements IAgent {
         return AgentType.Player;
     }
 
-    public void showBots(List<Robot> bots)
-    {
+    public void showBots(List<Robot> bots) {
         for (int i = 0; i < playerLayer.getHeight(); i++) {
             for (int e = 0; e < playerLayer.getWidth(); e++) {
-                playerLayer.setCell(i,e, new TiledMapTileLayer.Cell());
+                playerLayer.setCell(i, e, new TiledMapTileLayer.Cell());
             }
         }
-        for (Robot b : bots)
-        {
+        for (Robot b : bots) {
             Vector2 pos = b.getRobotPos();
 
-            botCells.get(b.getId()).setRotation(b.getFacing().getDegrees()-1);
-            playerLayer.setCell((int)pos.y,(int)pos.x,botCells.get(b.getId()));
-            System.out.println("Bot at x:" + pos.x +" y: " + pos.y);
-            System.out.println("Bot is facing "+b.getFacing().toString());
+            botCells.get(b.getId()).setRotation(b.getFacing().getDegrees() - 1);
+            playerLayer.setCell((int) pos.y, (int) pos.x, botCells.get(b.getId()));
+            System.out.println("Bot at x:" + pos.x + " y: " + pos.y);
+            System.out.println("Bot is facing " + b.getFacing().toString());
             System.out.println("Bot has " + b.getHp() + "HP");
         }
     }

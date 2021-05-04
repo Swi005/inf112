@@ -2,13 +2,12 @@ package tiles;
 
 import misc.Facing;
 
-public class Laser extends Wall{
+public class Laser extends Wall {
 
-    private Facing f;
-    private int damage;
+    private final Facing f;
+    private final int damage;
 
-    public Laser(Facing f, int damage, Facing[] walls)
-    {
+    public Laser(Facing f, int damage, Facing[] walls) {
         super(walls);
         this.f = f;
         this.damage = damage;
@@ -19,13 +18,11 @@ public class Laser extends Wall{
         return 0;
     }
 
-    public Facing getFacing()
-    {
+    public Facing getFacing() {
         return this.f;
     }
 
-    public int getDamage()
-    {
+    public int getDamage() {
         return this.damage;
     }
 }

@@ -4,54 +4,52 @@ import junit.framework.TestCase;
 import misc.Facing;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class FacingTest extends TestCase
-{
+class FacingTest extends TestCase {
     @Test
-    public void TestArgumentsAreEqual()
-    {
-        assertThrows(IllegalArgumentException.class, () ->{
-                new Facing(0, 0);
+    public void testArgumentsAreEqual() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Facing(0, 0);
         });
     }
+
     @Test
-    public void TestArgumentsAreBothNotZero()
-    {
-        assertThrows(IllegalArgumentException.class, () ->{
+    public void testArgumentsAreBothNotZero() {
+        assertThrows(IllegalArgumentException.class, () -> {
             new Facing(1, -1);
         });
     }
+
     @Test
-    public void TestArgumentOutOfBounds()
-    {
-        assertThrows(IllegalArgumentException.class, () ->{
+    public void testArgumentOutOfBounds() {
+        assertThrows(IllegalArgumentException.class, () -> {
             new Facing(15, 0);
         });
 
     }
+
     @Test
-    public void testInputAsString()
-    {
-        Facing t = new Facing(1,0);
+    public void testInputAsString() {
+        Facing t = new Facing(1, 0);
         Facing f = new Facing("north");
 
-        assertEquals(f,t);
+        assertEquals(f, t);
     }
+
     @Test
-    public void testInputAsWonkyString()
-    {
-        Facing t = new Facing(1,0);
+    public void testInputAsWonkyString() {
+        Facing t = new Facing(1, 0);
         Facing f = new Facing("nOrTh");
 
-        assertEquals(f,t);
+        assertEquals(f, t);
     }
+
     @Test
-    public void testTurn()
-    {
-        Facing right = new Facing(0,1);
-        Facing left = new Facing(0,-1);
-        Facing back = new Facing(-1,0);
+    public void testTurn() {
+        Facing right = new Facing(0, 1);
+        Facing left = new Facing(0, -1);
+        Facing back = new Facing(-1, 0);
 
 
         assertEquals(new Facing("South"), new Facing("east").turn(right));

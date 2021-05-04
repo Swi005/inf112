@@ -6,40 +6,22 @@ import com.badlogic.gdx.math.Vector2;
  * Custom Vector2 for NW/SE orientation
  */
 
-public class Facing extends Vector2
-{
-    public Facing(int NS, int EW)
-    {
-        super(NS,EW);
+public class Facing extends Vector2 {
+    public Facing(int NS, int EW) {
+        super(NS, EW);
         //Following code is for checking that its a valid facing
-        if(NS == EW)
-        {
-            throw new IllegalArgumentException("Invalid facing");
-
-        }
-        if(NS == 0)
-        {
-            if(!(EW == 1 || EW == -1))
-            {
-                throw new IllegalArgumentException("Argument is out of bounds");
-            }
-        }
-        if(EW == 0)
-        {
-            if(!(NS == 1 || NS == -1))
-            {
-                throw new IllegalArgumentException("Argument is out of bounds");
-            }
-
-        }
-        if(EW != 0 && NS != 0)
-            throw new IllegalArgumentException("Invalid facing");
+        if (NS == EW) throw new IllegalArgumentException("Invalid facing");
+        if (NS == 0) if (EW != 1)
+            if (EW != -1) throw new IllegalArgumentException("Argument is out of bounds");
+        if (EW == 0) if (NS != 1)
+            if (NS != -1) throw new IllegalArgumentException("Argument is out of bounds");
+        if (NS != 0)
+            if (EW != 0) throw new IllegalArgumentException("Invalid facing");
     }
-    public Facing(String facing)
-    {
+
+    public Facing(String facing) {
         super();
-        switch (facing.toLowerCase())
-        {
+        switch (facing.toLowerCase()) {
             case "north":
                 this.x = 1;
                 this.y = 0;
@@ -63,46 +45,45 @@ public class Facing extends Vector2
 
     @Override
     public boolean equals(Object obj) {
-        return (((Facing)obj).x == this.x && ((Facing)obj).y == this.y);
+        return (((Facing) obj).x == this.x && ((Facing) obj).y == this.y);
     }
 
-    public Facing turn(Facing v)
-    {
-        if(v.y == 1)
-            return (Facing)this.copy().rotate90(1);
-        if(v.y == -1)
-            return (Facing)this.copy().rotate90(-1);
-        if(v.x == -1)
-            return (Facing)this.copy().rotate90(1).rotate90(1);
+    public Facing turn(Facing v) {
+        if (v.y == 1)
+            return (Facing) this.copy().rotate90(1);
+        if (v.y == -1)
+            return (Facing) this.copy().rotate90(-1);
+        if (v.x == -1)
+            return (Facing) this.copy().rotate90(1).rotate90(1);
         return this.copy();
     }
-    public Facing copy()
-    {
-        return new Facing((int)this.x, (int)this.y);
+
+    public Facing copy() {
+        return new Facing((int) this.x, (int) this.y);
     }
 
     /**
      * Should only be used for gui rotation
+     *
      * @return
      */
-    public int getDegrees()
-    {
-        if(this.x > 0)
+    public int getDegrees() {
+        if (this.x > 0)
             return 1;
-        if(this.y < 0)
+        if (this.y < 0)
             return 2;
-        if(this.x < 0)
+        if (this.x < 0)
             return 3;
         return 0;
     }
 
     @Override
     public String toString() {
-        if(this.x > 0)
+        if (this.x > 0)
             return "North";
-        if(this.y > 0)
+        if (this.y > 0)
             return "East";
-        if(this.x < 0)
+        if (this.x < 0)
             return "South";
         return "West";
     }

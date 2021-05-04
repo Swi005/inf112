@@ -1,7 +1,6 @@
 package agent;
 
-public enum AgentType
-{
+public enum AgentType {
     MultiPlayer,
     AI,
     Player,

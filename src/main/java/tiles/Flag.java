@@ -1,20 +1,19 @@
 package tiles;
 
-public class Flag implements ITile{
+public class Flag implements ITile {
 
-    private int flagID;
-    public Flag(int id)
-    {
+    private final int flagID;
+
+    public Flag(int id) {
         this.flagID = id;
     }
+
     @Override
-    public int priority()
-    {
+    public int priority() {
         return 9999999;
     }
 
-    public int getFlagId()
-    {
+    public int getFlagId() {
         return flagID;
     }
 

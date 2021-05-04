@@ -1,7 +1,6 @@
 package cards;
 
-public class Reverse extends Move
-{
+public class Reverse extends Move {
     public Reverse(int move) {
         super(move);
     }

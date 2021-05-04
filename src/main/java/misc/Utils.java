@@ -3,36 +3,32 @@ package misc;
 import cards.*;
 import com.badlogic.gdx.math.Vector2;
 import gameBoard.GameBoard;
-import gameBoard.Robot;
 import tiles.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Utils
-{
+public class Utils {
     //TODO: Test findPath
+
     /**
      * finds a path in a straight line until its told to stop or encounters an obstacle
      *
-     * @param visited - previously visited tiles
-     * @param n - the number of steps it should search, if n is -1 it will run until it encounters an obstacle
+     * @param visited   - previously visited tiles
+     * @param n         - the number of steps it should search, if n is -1 it will run until it encounters an obstacle
      * @param direction - Which direction should it search
-     * @param game - the inf112.game
-     * @param currPos - the start position
+     * @param game      - the inf112.game
+     * @param currPos   - the start position
      * @return - returns a list of all coordinates it could go to.
      */
-    public static ArrayList<Vector2>  findPath(ArrayList<Vector2> visited, int n, Facing direction, GameBoard game, Vector2 currPos)
-    {
-        if(Utils.isWithinBounds(currPos, game.getHeight(), game.getHeight()))
-        {
+    public static ArrayList<Vector2> findPath(ArrayList<Vector2> visited, int n, Facing direction, GameBoard game, Vector2 currPos) {
+        if (Utils.isWithinBounds(currPos, game.getHeight(), game.getHeight())) {
             //add current pos
             visited.add(currPos);
             //Check if its possible to go to the next inf112.tile and that n isn't zero
-            if(n != 0 && game.canGo(currPos, currPos.cpy().add(direction)))
-            {
-                if(n != -1)
+            if (n != 0 && game.canGo(currPos, currPos.cpy().add(direction))) {
+                if (n != -1)
                     n--;
                 return findPath(visited, n, direction, game, currPos.cpy().add(direction));
             }
@@ -42,24 +38,24 @@ public class Utils
 
     /**
      * Checks if two positions are adjacent
+     *
      * @param u firstPos
      * @param v secondPos
      * @return - Boolean
      */
-    public static boolean isAdjacent(Vector2 u, Vector2 v)
-    {
-        return (Math.abs(u.x-v.x) <2 && Math.abs(u.y - v.y) <2);
+    public static boolean isAdjacent(Vector2 u, Vector2 v) {
+        return (Math.abs(u.x - v.x) < 2 && Math.abs(u.y - v.y) < 2);
     }
 
     /**
      * Check if all threads in the list have exited
+     *
      * @param threads - Threads to check
      * @return - Boolean
      */
-    public static boolean threadsHaveFinished(List<Thread> threads)
-    {
-        for (Thread t: threads) {
-            if(t.isAlive())
+    public static boolean threadsHaveFinished(List<Thread> threads) {
+        for (Thread t : threads) {
+            if (t.isAlive())
                 return false;
         }
         return true;
@@ -68,12 +64,12 @@ public class Utils
     /**
      * Converts a tile ID to a tile
      * Used for reading a .tmx file
+     *
      * @param id -tileID
      * @return
      */
-    public static ITile toTile(int id)
-    {
-        switch (id-1) {
+    public static ITile toTile(int id) {
+        switch (id - 1) {
             case 0:
                 return new Pusher(new Facing("north"));
             case 1:
@@ -169,21 +165,21 @@ public class Utils
             case 117:
                 return new Hole();
             case 120:
-                return new Spawnpoint(1-1);
+                return new Spawnpoint(1 - 1);
             case 121:
-                return new Spawnpoint(2-1);
+                return new Spawnpoint(2 - 1);
             case 123:
-                return new Spawnpoint(3-1);
+                return new Spawnpoint(3 - 1);
             case 124:
-                return new Spawnpoint(4-1);
+                return new Spawnpoint(4 - 1);
             case 128:
-                return new Spawnpoint(5-1);
+                return new Spawnpoint(5 - 1);
             case 129:
-                return new Spawnpoint(6-1);
+                return new Spawnpoint(6 - 1);
             case 130:
-                return new Spawnpoint(7-1);
+                return new Spawnpoint(7 - 1);
             case 131:
-                return new Spawnpoint(8-1);
+                return new Spawnpoint(8 - 1);
             default:
                 return new Floor();
         }
@@ -192,11 +188,11 @@ public class Utils
     /**
      * Gets card based upon an int
      * Used for generating a card deck
+     *
      * @param i
      * @return
      */
-    public static ICard getCard(int i)
-    {
+    public static ICard getCard(int i) {
         switch (i) {
             case 0:
                 return new Again();
@@ -219,8 +215,7 @@ public class Utils
         }
     }
 
-    public static boolean isWithinBounds(Vector2 botPos, int maxX, int maxY)
-    {
+    public static boolean isWithinBounds(Vector2 botPos, int maxX, int maxY) {
         return !(botPos.y >= maxY || botPos.y < 0 || botPos.x < 0 || botPos.x >= maxX);
     }
 }

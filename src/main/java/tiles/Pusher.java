@@ -2,17 +2,16 @@ package tiles;
 
 import misc.Facing;
 
-public class Pusher implements ITile
-{
-    Facing dir;
+public class Pusher implements ITile {
     public boolean isExtended = false;
-    public Pusher(Facing dir)
-    {
+    private Facing dir;
+
+    public Pusher(Facing dir) {
         this.dir = dir;
 
     }
-    public Pusher(Facing dir, boolean isExtended)
-    {
+
+    public Pusher(Facing dir, boolean isExtended) {
         this.dir = dir;
         this.isExtended = isExtended;
     }
@@ -22,10 +21,10 @@ public class Pusher implements ITile
      *
      * @return - direction
      */
-    public Facing getPushDirection()
-    {
+    public Facing getPushDirection() {
         return this.dir;
     }
+
     @Override
     public int priority() {
         return 0;

@@ -1,6 +1,5 @@
 package cards;
 
-public interface ICard
-{
+public interface ICard {
 
 }
