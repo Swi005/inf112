@@ -3,7 +3,7 @@ package cards;
 public class Reverse extends Move
 {
     public Reverse(int move) {
-        super(-move);
+        super(move);
     }
 
     @Override

@@ -41,7 +41,6 @@ public class GameBoard
      */
     public void updateBoardElements()
     {
-        //TODO: Implement this
         //I.e check robots positions and if they are on something. if they are on something do the appropriate thing.
         Queue<Robot> robotQueue = new Queue<>();
         for (Robot bot: bots)
@@ -64,14 +63,15 @@ public class GameBoard
                     bot.setRobotPos(botPos.add(((Pusher) board[(int) botPos.x][(int) botPos.y]).getPushDirection()));
                     robotQueue.addLast(bot);
                 }
+            /*
             if(board[(int) botPos.x][(int)botPos.y] instanceof Flag)
                 if(((Flag)board[(int) botPos.x][(int)botPos.y]).getFlagId() == bot.getNextFlag()) {
-                    if(!flagPos.containsKey(bot.getNextFlag()))
+                    if(!flagPos.containsKey(bot.getNextFlag()+1))
                         bot.setNextFlag(-1);
                     else
                         bot.setNextFlag(bot.getNextFlag()+1);
                     bot.setSpawnPoint(botPos);
-                }
+                }*/
         }
     }
 
@@ -106,6 +106,7 @@ public class GameBoard
     {
         for (Robot bot:bots) {
             if(!Utils.isWithinBounds(bot, this.getHeight(), this.getWidth())) {
+                System.out.println("Robot is out of bounds at x: " + bot.getRobotPos().x + " y: " + bot.getRobotPos().y);
                 bot.setFacing(new Facing("North"));
                 bot.setRobotPos(bot.getSpawnPoint());
             }
@@ -113,7 +114,7 @@ public class GameBoard
     }
     public Robot addBot(int id)
     {
-        Robot b = new Robot(id, 10, 0, spawnpoints.get(id).cpy(), new Facing("north"));
+        Robot b = new Robot(id, 10, 1, spawnpoints.get(id).cpy(), new Facing("north"));
         bots.add(b);
         return b;
     }
@@ -139,16 +140,15 @@ public class GameBoard
                 bot.setSpawnPoint(bot.getRobotPos());
                 bot.repair(1);
             }
-            if(bot.getRobotPos() == flagPos.get(bot.getNextFlag()))
+            if(bot.getRobotPos().equals(flagPos.get(bot.getNextFlag())))
             {
+                System.out.println("Bot visited flag: " + bot.getNextFlag());
+                System.out.println("Next flag is : " + (bot.getNextFlag()+1));
                 bot.setSpawnPoint(bot.getRobotPos());
                 if(flagPos.containsKey(bot.getNextFlag()+1))
-                {
                     bot.setNextFlag(bot.getNextFlag()+1);
-                }
-                else{
-                    //TODO: ADD VICTORY STUFF
-                }
+                else
+                    bot.setNextFlag(-1);
             }
             if(bot.getHp() == 0){//if it has 0 hp set spawn it at its spawnpoint
                 bot.setRobotPos(bot.getSpawnPoint());
@@ -162,9 +162,12 @@ public class GameBoard
     }
 
     public boolean checkWin() {
-        for (Robot b:bots) {
+
+        for (Robot b:bots)
+        {
             if(b.getNextFlag() == -1)
             {
+                System.out.println("Won");
                 return true;
             }
         }

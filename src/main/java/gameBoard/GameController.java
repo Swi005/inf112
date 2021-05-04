@@ -1,11 +1,9 @@
 package gameBoard;
 
 import agent.IAgent;
-import cards.Again;
-import cards.ICard;
-import cards.Move;
-import cards.Turn;
+import cards.*;
 import com.badlogic.gdx.math.Vector2;
+import misc.Facing;
 import misc.Utils;
 
 import java.util.*;
@@ -102,14 +100,22 @@ public class GameController {
             c = a.getBotRegister()[instructionIndex-1];
         else if(c instanceof Again && instructionIndex == 0) //If its the first instruction do nothing this turn
             return;
+        if(c instanceof Reverse)
+        {
+            List<Vector2> pos = Utils.findPath(new ArrayList<Vector2>(), ((Move) c).moveLen, gameBoard.getBot(a.getId()).getFacing().turn(new Facing("South")),gameBoard, gameBoard.getBot(a.getId()).getRobotPos());
+            gameBoard.getBot(a.getId()).setRobotPos(pos.get(pos.size()-1));
+            return;
+        }
         if(c instanceof Move)
         {
             List<Vector2> pos = Utils.findPath(new ArrayList<Vector2>(), ((Move) c).moveLen, gameBoard.getBot(a.getId()).getFacing(),gameBoard, gameBoard.getBot(a.getId()).getRobotPos());
             gameBoard.getBot(a.getId()).setRobotPos(pos.get(pos.size()-1));
+            return;
         }
         if(c instanceof Turn)
         {
             gameBoard.getBot(a.getId()).setFacing(gameBoard.getBot(a.getId()).getFacing().turn(((Turn) c).turn));
+            return;
         }
     }
     private void activateBoardElements()

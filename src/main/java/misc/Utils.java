@@ -32,7 +32,7 @@ public class Utils
             if(n != -1)
                 n--;
             //Check if its possible to go to the next inf112.tile and that n isn't zero
-            if(game.canGo(currPos, currPos.cpy().add(direction)) && n >= 0)
+            if(n >= 0 && game.canGo(currPos, currPos.cpy().add(direction)) )
             {
                 return findPath(_visited, n, direction, game, currPos.cpy().add(direction));
             }
