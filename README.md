@@ -2,7 +2,7 @@
 Roborally for INF112. 
 
 
-## Running the program(Windows only for now)
+## Running the program
 ### Requirements
 * Up-to-date Java install
 
